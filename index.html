@@ -4,75 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTuber 工作室官方網站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #e0f2fe; /* 淺藍色背景 */
+            --primary-blue: #0369a1;
+            --yt-red: #FF0000;
+            --dc-purple: #5865F2;
+        }
+
         body {
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #1e1e2f 0%, #0f0f1a 100%);
-            color: #ffffff;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: #1e293b;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            text-align: center;
+            overflow: hidden;
         }
+
+        /* 左上角三條線選單 */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 100;
+            color: var(--primary-blue);
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        .menu-btn:hover {
+            background: rgba(3, 105, 161, 0.1);
+        }
+
         .container {
             max-width: 600px;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
         }
+
         h1 {
-            font-size: 2.5rem;
-            color: #00ffcc;
+            font-size: 2.8rem;
+            color: var(--primary-blue);
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(0,255,204,0.3);
         }
+
         p {
             font-size: 1.1rem;
-            color: #cccccc;
+            color: #475569;
             line-height: 1.6;
         }
+
         .status-badge {
             display: inline-block;
-            background: #22c55e;
-            color: white;
-            padding: 5px 15px;
+            background: #bae6fd;
+            color: #0369a1;
+            padding: 6px 18px;
             border-radius: 50px;
             font-size: 0.9rem;
             margin-bottom: 20px;
+            font-weight: bold;
         }
-        .links a {
-            display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            color: #00ffcc;
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            color: white;
             text-decoration: none;
-            border: 1px solid #00ffcc;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .links a:hover {
-            background: #00ffcc;
-            color: #121212;
-            box-shadow: 0 0 15px rgba(0,255,204,0.5);
+
+        .btn i {
+            margin-right: 10px;
+            font-size: 1.4rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-yt { background-color: var(--yt-red); }
+        .btn-dc { background-color: var(--dc-purple); }
+
+        hr {
+            border: 0;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            margin: 30px 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="status-badge">官方網站建置中</div>
-        <h1>VTuber 工作室</h1>
-        <p>歡迎來到我們的全新起點！官方網站正在全力籌備中，未來將在此公開旗下 VTuber 的藝人資訊、最新活動與合作洽談。</p>
-        <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 30px 0;">
-        <div class="links">
-            <a href="#" target="_blank">YouTube 頻道</a>
-            <a href="#" target="_blank">Discord 伺服器</a>
-        </div>
+
+    <div class="menu-btn" onclick="alert('選單功能開發中！未來可用於切換藝人列表、工作室規範等。')">
+        <i class="fas fa-bars"></i>
     </div>
+
+    <div class="container">
+        <div class="status-badge"><i class="fas fa-tools"></i> 官網改版中</div>
+        <h1>VTuber 工作室</h1>
+        <p>歡迎來到我們的基地！官網正依照新的冰霜風格進行升級。我們將在這裡分享最新的 V 藝人動態與創作連結。</p>
+        
+        <div class="links">
+            <a href="https://www.youtube.com/@Anew_dream" target="_blank" class="btn btn-yt">
+                <i class="fab fa-youtube"></i> YouTube 頻道
+            </a>
+            <a href="https://discord.gg/D5EpW8dmUA" target="_blank" class="btn btn-dc">
+                <i class="fab fa-discord"></i> Discord 伺服器
+            </a>
+        </div>
+        
+        <hr>
+        <p style="font-size: 0.9rem; color: #94a3b8;">© 2024 VTuber 工作室 - 專業架設測試</p>
+    </div>
+
 </body>
 </html>
