@@ -11,6 +11,7 @@
             --primary-blue: #0369a1;
             --yt-red: #FF0000;
             --dc-purple: #5865F2;
+            --dark-blue: #0c4a6e;
         }
 
         body {
@@ -26,14 +27,14 @@
             overflow: hidden;
         }
 
-        /* 左上角三條線選單 */
+        /* ☰ 左上角選單按鈕 */
         .menu-btn {
             position: fixed;
             top: 20px;
             left: 20px;
             font-size: 24px;
             cursor: pointer;
-            z-index: 100;
+            z-index: 90;
             color: var(--primary-blue);
             padding: 10px;
             border-radius: 8px;
@@ -43,6 +44,107 @@
             background: rgba(3, 105, 161, 0.1);
         }
 
+        /* 🪟 側邊欄選單本體 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px; /* 預設藏在外面 */
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: left 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 當啟動時滑出 */
+        .sidebar.active {
+            left: 0;
+        }
+
+        /* 選單頂部區塊（放置你要求的標題） */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #bae6fd;
+            padding-bottom: 15px;
+        }
+
+        .sidebar-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        /* ❌ 關閉按鈕 */
+        .close-btn {
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+            transition: color 0.2s;
+        }
+        .close-btn:hover {
+            color: var(--yt-red);
+        }
+
+        /* 🔗 選單項目連結 */
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--dark-blue);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+            color: var(--primary-blue);
+        }
+
+        .menu-item:hover {
+            background: #e0f2fe;
+            color: var(--primary-blue);
+            transform: translateX(5px);
+        }
+
+        /* ⬛ 背景黑色遮罩 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 95;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* 📄 主容器 */
         .container {
             max-width: 600px;
             padding: 40px;
@@ -52,6 +154,7 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             text-align: center;
+            z-index: 1;
         }
 
         h1 {
@@ -119,9 +222,34 @@
 </head>
 <body>
 
-    <div class="menu-btn" onclick="alert('選單功能開發中！未來可用於切換藝人列表、工作室規範等。')">
+    <div class="menu-btn" onclick="toggleMenu()">
         <i class="fas fa-bars"></i>
     </div>
+
+    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title"><i class="fas fa-hub"></i> VTuber 聚集地</span>
+            <div class="close-btn" onclick="toggleMenu()">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+        <div class="menu-items">
+            <a href="#" class="menu-item" onclick="toggleMenu()">
+                <i class="fas fa-home"></i>基地首頁
+            </a>
+            <a href="#" class="menu-item" onclick="alert('藝人名單籌備中！')">
+                <i class="fas fa-user-friends"></i>大 / 小 VTuber 列表
+            </a>
+            <a href="#" class="menu-item" onclick="alert('目前網站正在測試階段，敬請期待未來功能！')">
+                <i class="fas fa-bullhorn"></i>最新動態公報
+            </a>
+            <a href="mailto:admin@vtuber.qd.je" class="menu-item">
+                <i class="fas fa-envelope"></i>商務與合作聯絡
+            </a>
+        </div>
+    </nav>
 
     <div class="container">
         <div class="status-badge"><i class="fas fa-tools"></i> 官網改版中</div>
@@ -140,6 +268,13 @@
         <hr>
         <p style="font-size: 0.9rem; color: #94a3b8;">© 2026 VTuber聚集地 - 網站測試中</p>
     </div>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+    </script>
 
 </body>
 </html>
