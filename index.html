@@ -129,11 +129,13 @@
             padding: 12px 25px; color: white; text-decoration: none;
             border-radius: 15px; font-weight: bold; font-size: 1.1rem;
             transition: transform 0.2s, box-shadow 0.2s;
+            border: none; cursor: pointer;
         }
         .btn i { margin-right: 10px; font-size: 1.4rem; }
         .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .btn-yt { background-color: var(--yt-red); }
         .btn-dc { background-color: var(--dc-purple); }
+        .btn-pink { background-color: var(--heart-pink); }
 
         /* 👥 VTuber 列表排版 */
         .vtuber-grid {
@@ -221,6 +223,15 @@
             border: 1px solid #fbcfe8; padding: 20px; border-radius: 20px;
             margin-bottom: 25px; color: #9d174d; font-weight: 500; line-height: 1.6;
         }
+
+        .care-anonymous-box {
+            background: #fff; border: 1px solid rgba(236, 72, 153, 0.2);
+            border-radius: 20px; padding: 25px; margin-top: 30px;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.03);
+        }
+        .care-anonymous-box h3 { color: #9d174d; margin-top: 0; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .care-form-container { display: none; margin-top: 20px; border-top: 1px dashed #fbcfe8; padding-top: 20px;}
+        .care-form-container.active { display: block; }
 
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.05); margin: 30px 0; }
     </style>
@@ -314,7 +325,7 @@
             <h1>心靈充電站</h1>
             <div class="warm-banner">
                 <i class="fas fa-mug-hot"></i> <b>親愛的夥伴：</b><br>
-                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面這些專業的傾聽者，隨時準備用溫柔接住你。
+                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面 these 專業的傾聽者，隨時準備用溫柔接住你。
             </div>
             
             <div class="helpline-grid">
@@ -340,6 +351,17 @@
                     </div>
                 </div>
             </div>
+
+            <div class="care-anonymous-box">
+                <h3><i class="fas fa-feather-alt"></i> 寫封信給基地總裁</h3>
+                <p>如果你不習慣聯絡外面的機構，只想把心事留在這裡，可以點擊下方按鈕。這是一個完全獨立的匿名留言樹洞，你可以放心寫下任何痛苦或創傷，我們會用最溫暖的心讀完它。</p>
+                <button class="btn btn-pink" onclick="toggleCareForm()"><i class="fas fa-paper-plane"></i> 開啟匿名傾訴樹洞</button>
+                
+                <div id="care-form-wrapper" class="care-form-container">
+                    <iframe id="care-form-iframe" class="form-iframe" src="">載入匿名樹洞中...</iframe>
+                </div>
+            </div>
+
             <p style="margin-top: 30px; font-size: 0.9rem; color: #64748b;"><i class="fas fa-shield-alt"></i> 本專區資訊皆為公開之台灣官方與公益機構求助管線，所有諮商對話均受隱私與法律保護。</p>
         </div>
         
@@ -353,7 +375,11 @@
         const DISCORD_SERVER_ID_1 = "123456789012345678"; 
         const DISCORD_SERVER_ID_2 = "876543210987654321"; 
 
+        // 1️⃣ 聯絡表單連結
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
+
+        // 2️⃣ 🌸 心靈充電站專用連結（已替換成小揖剛剛給我的新問卷！）
+        const GOOGLE_CARE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeUpky7LhO2KNyvr64R0nYbbQh-qMw9ouI-1nzKzmE4aG1hzA/viewform?embedded=true";
 
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
@@ -367,11 +393,21 @@
             if(pageId === 'list') { fetchVTubers(); }
             if(pageId === 'news') { loadDiscordWidgets(); }
             if(pageId === 'contact') { switchContact('dc'); } 
+            if(pageId !== 'care') { document.getElementById('care-form-wrapper').classList.remove('active'); }
         }
 
         function loadDiscordWidgets() {
             document.getElementById('dc-widget-1').src = `https://discord.com/widget?id=${DISCORD_SERVER_ID_1}&theme=dark`;
             document.getElementById('dc-widget-2').src = `https://discord.com/widget?id=${DISCORD_SERVER_ID_2}&theme=dark`;
+        }
+
+        function toggleCareForm() {
+            const wrapper = document.getElementById('care-form-wrapper');
+            const iframe = document.getElementById('care-form-iframe');
+            wrapper.classList.toggle('active');
+            if(wrapper.classList.contains('active')) {
+                iframe.src = GOOGLE_CARE_FORM_URL;
+            }
         }
 
         function switchContact(type) {
