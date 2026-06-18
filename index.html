@@ -112,11 +112,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.7); text-align: center; transition: transform 0.2s;
         }
         .vtuber-card:hover { transform: translateY(-5px); }
-        .vtuber-title-tag { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 0.75rem; font-weight: bold; padding: 3px 10px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #bae6fd; }
-        .vtuber-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #bae6fd; margin-bottom: 12px; }
         .vtuber-name { font-size: 1.3rem; font-weight: bold; color: var(--dark-blue); margin: 5px 0 8px 0; }
         .vtuber-desc { font-size: 0.9rem; color: #475569; min-height: 40px; margin-bottom: 15px; line-height: 1.4; }
-        .btn-sm-yt { display: inline-flex; align-items: center; justify-content: center; background: var(--yt-red); color: white; text-decoration: none; padding: 8px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
 
         /* 📢 Discord 公告欄排版 */
         .dc-news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px; }
@@ -268,7 +265,7 @@
             <h1 id="care-title">心靈充電站</h1>
             <div class="warm-banner" id="care-banner">
                 <i class="fas fa-mug-hot"></i> <b>親愛的夥伴：</b><br>
-                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。
+                在創作、追夢 or 生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。
             </div>
             
             <div class="helpline-grid">
@@ -301,16 +298,21 @@
         // 🔗 完美綁定小揖最新的「背景圖片控制試算表」！
         const BACKGROUND_CONFIG_URL = "https://docs.google.com/spreadsheets/d/1v-ctCZcRr_rGwTMlC2FphlyuRvW5cfSub44yyTklWO0/gviz/tq?tqx=out:csv";
         
+        // 相關後台資料庫對接網址
         const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1iaEgVqq3hUeSAD1cTIjPPONN0jd9SzYO4q40mixAb6E/gviz/tq?tqx=out:csv";
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
         const GOOGLE_CARE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeUpky7LhO2KNyvr64R0nYbbQh-qMw9ouI-1nzKzmE4aG1hzA/viewform?embedded=true";
+
+        // Discord 公告連線掛件網址
+        const DC_WIDGET_1_URL = "https://discord.com/widget?id=1321791530965373009&theme=dark";
+        const DC_WIDGET_2_URL = "https://discord.com/widget?id=1334057866504503348&theme=dark";
 
         // 本地預設高質感圖片（萬一表單網址填錯或失效時做防護防爆）
         let bgCache = {
             home: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920",
             list: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920",
             news: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1920",
-            mc: "https://images.unsplash.com/photo-1607988795691-3d0147b43231?q=80&w=1920", // 預設麥塊宇宙
+            mc: "https://images.unsplash.com/photo-1607988795691-3d0147b43231?q=80&w=1920",
             contact: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920",
             care: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920"
         };
@@ -326,6 +328,7 @@
                     if (index === 0) return; // 跳過第一行標頭
                     const cols = parseCSVLine(line);
                     if(cols.length >= 2) {
+                        // 🌟 修正重點：利用 .toLowerCase() 消除試算表上大小寫（如 Home 與 home）的對齊誤差
                         const pageId = cols[0].replace(/^"|"$/g, '').trim().toLowerCase();
                         const imgUrl = cols[1].replace(/^"|"$/g, '').trim();
                         if(bgCache[pageId] !== undefined && imgUrl !== "") {
@@ -380,7 +383,6 @@
             currentGlobalLang = langCode;
             const dict = mainI18n[langCode];
 
-            // 翻譯選單與按鈕
             document.getElementById('nav-header-title').innerHTML = `<i class="fas fa-hub"></i> ${dict.navTitle}`;
             document.getElementById('mi-home').innerHTML = `<i class="fas fa-home"></i>${dict.home}`;
             document.getElementById('mi-list').innerHTML = `<i class="fas fa-user-friends"></i>${dict.list}`;
@@ -390,12 +392,10 @@
             document.getElementById('mi-mc').innerHTML = `<i class="fas fa-cubes"></i>${dict.mc}`;
             document.getElementById('mi-pj').innerHTML = `<i class="fas fa-folder-open"></i>${dict.pj}`;
 
-            // 翻譯首頁
             document.getElementById('home-badge').innerHTML = `<i class="fas fa-tools"></i> ${dict.badge}`;
             document.getElementById('home-title').innerText = dict.hTitle;
             document.getElementById('home-desc').innerText = dict.hDesc;
 
-            // 翻譯 Minecraft 頁面
             document.getElementById('mc-title').innerText = dict.mcT;
             document.getElementById('mc-subtitle').innerText = dict.mcSub;
             document.getElementById('mc-btn-copy').innerHTML = `<i class="fas fa-copy"></i> ${dict.mcBtn}`;
@@ -415,11 +415,14 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(`page-${pageId}`).classList.add('active');
             
-            // 🚀 重點：切換虛擬頁面時，即時變換成該頁面對應的後台背景！
             updateBackground(pageId);
-
             toggleMenu();
+
             if(pageId === 'list') { fetchVTubers(); }
+            if(pageId === 'news') {
+                document.getElementById('dc-widget-1').src = DC_WIDGET_1_URL;
+                document.getElementById('dc-widget-2').src = DC_WIDGET_2_URL;
+            }
             if(pageId === 'contact') { switchContact('dc'); } 
         }
 
@@ -473,7 +476,6 @@
             });
         }
 
-        // 🏁 頁面初次加載時，全自動通訊抓取背景
         window.onload = () => {
             loadBackgroundsFromSpreadsheet();
         };
