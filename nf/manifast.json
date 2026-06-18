@@ -1,0 +1,16 @@
+{
+  "name": "Netflix 狀態同步器",
+  "short_name": "Netflix狀態",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#141414",
+  "theme-color": "#141414",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5977/5977590.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
