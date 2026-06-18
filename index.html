@@ -15,6 +15,7 @@
             --gmail-red: #EA4335;
             --heart-pink: #ec4899;
             --mint-green: #0d9488;
+            --pj-purple: #8b5cf6;
         }
 
         body {
@@ -251,6 +252,7 @@
             <div class="menu-item" onclick="showPage('list')"><i class="fas fa-user-friends"></i>大 / 小 VTuber 列表</div>
             <div class="menu-item" onclick="showPage('news')"><i class="fas fa-bullhorn"></i>最新動態公報</div>
             <div class="menu-item" onclick="showPage('contact')"><i class="fas fa-envelope"></i>商務與合作聯絡</div>
+            <a href="/pj" class="menu-item" style="color: var(--pj-purple); text-decoration:none;"><i class="fas fa-folder-open"></i>工作室專案頁面 (pj)</a>
             <div class="menu-item" onclick="showPage('care')" style="color: var(--heart-pink);"><i class="fas fa-heart"></i>心靈充電站 (求助專區)</div>
         </div>
     </nav>
@@ -325,7 +327,7 @@
             <h1>心靈充電站</h1>
             <div class="warm-banner">
                 <i class="fas fa-mug-hot"></i> <b>親愛的夥伴：</b><br>
-                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面 these 專業的傾聽者，隨時準備用溫柔接住你。
+                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面這些專業的傾聽者，隨時準備用溫柔接住你。
             </div>
             
             <div class="helpline-grid">
@@ -371,14 +373,9 @@
 
     <script>
         const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1iaEgVqq3hUeSAD1cTIjPPONN0jd9SzYO4q40mixAb6E/gviz/tq?tqx=out:csv";
-
         const DISCORD_SERVER_ID_1 = "123456789012345678"; 
         const DISCORD_SERVER_ID_2 = "876543210987654321"; 
-
-        // 1️⃣ 聯絡表單連結
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
-
-        // 2️⃣ 🌸 心靈充電站專用連結（已替換成小揖剛剛給我的新問卷！）
         const GOOGLE_CARE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeUpky7LhO2KNyvr64R0nYbbQh-qMw9ouI-1nzKzmE4aG1hzA/viewform?embedded=true";
 
         function toggleMenu() {
@@ -413,13 +410,9 @@
         function switchContact(type) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.contact-panel').forEach(p => p.classList.remove('active'));
-            
             document.querySelector(`.tab-${type}`).classList.add('active');
             document.getElementById(`contact-${type}`).classList.add('active');
-            
-            if(type === 'form') {
-                document.getElementById('google-form-iframe').src = GOOGLE_FORM_URL;
-            }
+            if(type === 'form') { document.getElementById('google-form-iframe').src = GOOGLE_FORM_URL; }
         }
 
         function parseCSVLine(text) {
