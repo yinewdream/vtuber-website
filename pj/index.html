@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工作室專案計畫分類 - Project</title>
+    <title>工作室專案計畫分類 - Project HUB</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -11,10 +11,11 @@
             --primary-purple: #8b5cf6;
             --dark-purple: #4c1d95;
             --text-dark: #1e1b4b;
+            --spotify-green: #1DB954;
         }
 
         body {
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
             color: var(--text-dark);
             margin: 0;
@@ -26,86 +27,145 @@
         }
 
         .container {
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 850px;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.05);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.08);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.6);
             text-align: center;
             box-sizing: border-box;
-            margin: 20px 0;
+            margin: 40px 0;
+            position: relative;
         }
 
-        h1 { font-size: 2.5rem; color: var(--dark-purple); margin-bottom: 5px; }
-        .subtitle { font-size: 1.1rem; color: #6d28d9; margin-bottom: 30px; font-weight: 500; }
+        /* 🌐 語言切換列 */
+        .lang-switcher {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 5px 10px;
+            border-radius: 50px;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
 
-        /* 📁 專案方塊排版 */
+        .lang-btn {
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 50px;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            color: var(--primary-purple);
+        }
+
+        .lang-btn.active {
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        h1 { font-size: 2.6rem; color: var(--dark-purple); margin-top: 20px; margin-bottom: 5px; }
+        .subtitle { font-size: 1.1rem; color: #6d28d9; margin-bottom: 25px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+        .intro-text { color: #4b5563; max-width: 600px; margin: 0 auto 35px auto; line-height: 1.6; }
+
+        /* 📁 專案網格 */
         .project-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 25px;
-            margin-top: 20px;
+            margin-bottom: 35px;
             text-align: left;
         }
 
         .project-card {
             background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            border: 1px solid rgba(139, 92, 246, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.01);
+            border: 1px solid rgba(139, 92, 246, 0.08);
             transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .project-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.1);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.12);
             border-color: var(--primary-purple);
         }
 
-        .project-icon {
-            font-size: 2rem;
-            color: var(--primary-purple);
-            margin-bottom: 15px;
-        }
-
-        .project-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: var(--dark-purple);
-            margin-bottom: 10px;
-        }
-
-        .project-desc {
-            font-size: 0.95rem;
-            color: #4b5563;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .project-tag {
-            display: inline-block;
+        .card-top { position: relative; }
+        .project-icon { font-size: 2.2rem; color: var(--primary-purple); margin-bottom: 15px; }
+        .project-title { font-size: 1.4rem; font-weight: bold; color: var(--dark-purple); margin-bottom: 10px; }
+        .project-desc { font-size: 0.95rem; color: #4b5563; line-height: 1.6; margin-bottom: 20px; }
+        
+        /* 按鈕樣式 */
+        .card-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
             background: #f5f3ff;
             color: var(--primary-purple);
-            font-size: 0.8rem;
+            text-decoration: none;
+            border-radius: 14px;
             font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 50px;
+            font-size: 0.95rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-sizing: border-box;
         }
+        .card-action-btn:hover {
+            background: var(--primary-purple);
+            color: white;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        /* 🎵 Spotify 專用區塊 */
+        .spotify-section {
+            background: white;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(139, 92, 246, 0.08);
+            margin-bottom: 35px;
+            text-align: left;
+        }
+        .spotify-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark-purple);
+            margin-bottom: 15px;
+        }
+        .spotify-header i { color: var(--spotify-green); font-size: 1.5rem; }
 
         /* 返回主頁按鈕 */
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 35px;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: var(--primary-purple);
             color: white;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: bold;
             transition: all 0.2s;
             border: none;
@@ -116,43 +176,172 @@
             transform: translateX(-3px);
         }
 
-        hr { border: 0; border-top: 1px solid rgba(139, 92, 246, 0.1); margin: 30px 0; }
+        hr { border: 0; border-top: 1px solid rgba(139, 92, 246, 0.1); margin: 35px 0; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>工作室專案計畫</h1>
-        <div class="subtitle">Project Administration HUB</div>
-        <p style="color: #6b7280;">這裡記錄了我們團隊核心開發、營運中或籌備中的重大專案分類。</p>
+        <div class="lang-switcher">
+            <button class="lang-btn active" onclick="changeLang('tw')">TW</button>
+            <button class="lang-btn" onclick="changeLang('cn')">CN</button>
+            <button class="lang-btn" onclick="changeLang('jp')">JP</button>
+            <button class="lang-btn" onclick="changeLang('en')">EN</button>
+        </div>
+
+        <h1 id="main-title">工作室專案計畫</h1>
+        <div class="subtitle" id="main-sub">Project HUB</div>
+        <p class="intro-text" id="main-intro">歡迎來到專案中心！這裡整合了我們目前維護中的核心伺服器、開源 Python 工具套件，以及最新發行的原創音樂串流作品。</p>
 
         <div class="project-grid">
             <div class="project-card">
-                <div class="project-icon"><i class="fas fa-cubes"></i></div>
-                <div class="project-title">Minecraft 遊戲伺服器</div>
-                <div class="project-desc">基於高速網路架構的麥塊私人伺服器，提供社群夥伴最流暢、穩定的生存與連線遊玩體驗。</div>
-                <div class="project-tag">營運中</div>
+                <div class="card-top">
+                    <div class="project-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="project-title" id="pj1-title">Minecraft 遊戲伺服器</div>
+                    <div class="project-desc" id="pj1-desc">歡迎連線遊玩！點擊下方按鈕即可一鍵複製伺服器官方連線 IP，直接進入我們的麥塊社群生存世界。</div>
+                </div>
+                <button class="card-action-btn" id="pj1-btn" onclick="copyIP()"><i class="fas fa-copy"></i> 複製伺服器 IP (vtuber.qd.je)</button>
             </div>
 
             <div class="project-card">
-                <div class="project-icon"><i class="fas fa-code"></i></div>
-                <div class="project-title">Python 應用工具開發</div>
-                <div class="project-desc">研發影像分析、影音自動化處理引擎等輕量級工具，全面提升工作室內部與藝人的產出效率。</div>
-                <div class="project-tag">開發中</div>
+                <div class="card-top">
+                    <div class="project-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="project-title">YiCountPlus</div>
+                    <div class="project-desc" id="pj2-desc">基於 Python 開發的高校圖像計數與分析系統。提供高整合度的圖形操作介面（GUI），大幅提升數據化分析的工作產能。</div>
+                </div>
+                <a href="https://github.com/yinewdream/YiCountPlus" target="_blank" class="card-action-btn" id="pj2-btn"><i class="fab fa-github"></i> GitHub 專案與下載</a>
             </div>
 
             <div class="project-card">
-                <div class="project-icon"><i class="fas fa-music"></i></div>
-                <div class="project-title">數位音樂與語音調教</div>
-                <div class="project-desc">結合 AI 歌聲合成軟體（Synthesizer V）進行高精確度調教，籌備各項原創單曲與音樂發行計畫。</div>
-                <div class="project-tag">籌備中</div>
+                <div class="card-top">
+                    <div class="project-icon"><i class="fas fa-hand-paper"></i></div>
+                    <div class="project-title">YiHand Track Plugin</div>
+                    <div class="project-desc" id="pj3-desc">專為 VSeeFace 量身打造的高精確度 AI 手部追蹤核心插件。無須配戴手套或硬體感應器，透過普通視訊鏡頭即可實現靈活流暢的手勢捕捉。</div>
+                </div>
+                <a href="https://github.com/yinewdream/YiHand" target="_blank" class="card-action-btn" id="pj3-btn"><i class="fab fa-download"></i> 下載 YiHand 追蹤插件</a>
             </div>
         </div>
 
+        <div class="spotify-section">
+            <div class="spotify-header" id="spot-title"><i class="fab fa-spotify"></i> 音樂作品發行 (Spotify)</div>
+            <p id="spot-desc" style="font-size: 0.95rem; color: #4b5563; margin-top: 0; margin-bottom: 20px;">聆聽我們製作發行的原創單曲與音樂作品集：</p>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/artist/4X9NqR9vLwOmsw7bAnKk26" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+        </div>
+
         <hr>
-        <a href="/" class="back-btn"><i class="fas fa-arrow-left"></i> 返回基地主網頁</a>
-        <p style="font-size: 0.9rem; color: #cbd5e1; margin-top: 25px;">© 2026 VTuber聚集地 - Project Hub</p>
+        <a href="/" class="back-btn" id="back-btn"><i class="fas fa-arrow-left"></i> 返回基地主網頁</a>
+        <p style="font-size: 0.9rem; color: #94a3b8; margin-top: 25px;">© 2026 VTuber聚集地 - Project Hub</p>
     </div>
 
+    <script>
+        // 🗺️ 四國語言字典資料庫
+        const i18n = {
+            tw: {
+                title: "工作室專案計畫",
+                sub: "Project HUB",
+                intro: "歡迎來到專案中心！這裡整合了我們目前維護中的核心伺服器、開源 Python 工具套件，以及最新發行的原創音樂串流作品。",
+                pj1Title: "Minecraft 遊戲伺服器",
+                pj1Desc: "歡迎連線遊玩！點擊下方按鈕即可一鍵複製伺服器官方連線 IP，直接進入我們的麥塊社群生存世界。",
+                pj1Btn: "複製伺服器 IP (vtuber.qd.je)",
+                pj2Desc: "基於 Python 開發的高校圖像計數與分析系統。提供高整合度的圖形操作介面（GUI），大幅提升數據化分析的工作產能。",
+                pj2Btn: "GitHub 專案與下載",
+                pj3Desc: "專為 VSeeFace 量身打造的高精確度 AI 手部追蹤核心插件。無須配戴手套或硬體感應器，透過普通視訊鏡頭即可實現靈活流暢的手勢捕捉。",
+                pj3Btn: "下載 YiHand 追蹤插件",
+                spotTitle: "音樂作品發行 (Spotify)",
+                spotDesc: "聆聽我們製作發行的原創單曲與音樂作品集：",
+                backBtn: "返回基地主網頁",
+                copied: "✅ 伺服器 IP (vtuber.qd.je) 已成功複製到剪貼簿！"
+            },
+            cn: {
+                title: "工作室项目计划",
+                sub: "Project HUB",
+                intro: "欢迎来到项目中心！这里整合了我們目前维护中的核心服务器、开源 Python 工具套件，以及最新发行的原创音乐流媒体作品。",
+                pj1Title: "Minecraft 游戏服务器",
+                pj1Desc: "欢迎连线游玩！点击下方按钮即可一键复制服务器官方连线 IP，直接进入我們的麦块社区生存世界。",
+                pj1Btn: "复制服务器 IP (vtuber.qd.je)",
+                pj2Desc: "基于 Python 开发的高校图像计数与分析系统。提供高集成度的图形操作界面（GUI），大幅提升数据化分析的工作产能。",
+                pj2Btn: "GitHub 项目与下载",
+                pj3Desc: "专为 VSeeFace 量身打造的高精确度 AI 手部追踪核心插件。无须佩戴手套或硬件感应器，通过普通视频镜头即可实现灵活流畅的手势捕捉。",
+                pj3Btn: "下载 YiHand 追踪插件",
+                spotTitle: "音乐作品发行 (Spotify)",
+                spotDesc: "聆听我们制作发行的原创单曲与音乐作品集：",
+                backBtn: "返回基地主网页",
+                copied: "✅ 服务器 IP (vtuber.qd.je) 已成功复制到剪贴簿！"
+            },
+            jp: {
+                title: "スタジオプロジェクト",
+                sub: "Project HUB",
+                intro: "プロジェクトセンターへようこそ！ここでは、現在運営中のコアサーバー、オープンソースの Python ツールキット、および最新リリースのオリジナル音楽配信作品を統合しています。",
+                pj1Title: "Minecraft ゲームサーバー",
+                pj1Desc: "接続大歓迎！下のボタンをクリックすると、サーバーの公式IPアドレスをワンクリックでコピーし、マイクラコミュニティの世界に直接参加できます。",
+                pj1Btn: "サーバーIPをコピー (vtuber.qd.je)",
+                pj2Desc: "Pythonベースの効率的な画像カウント・分析システム。高度に統合されたグラフィカルインターフェース（GUI）を提供し、データ分析の生産性を大幅に向上させます。",
+                pj2Btn: "GitHub プロジェクトとダウンロード",
+                pj3Desc: "VSeeFace専用に設計された高精度AIハンドトラッキングコアプラグイン。特殊な手袋やセンサーは不要で、通常のWebカメラだけで柔軟で滑らかなジェスチャーキャプチャを実現します。",
+                pj3Btn: "YiHand プラグインをダウンロード",
+                spotTitle: "音楽リリース (Spotify)",
+                spotDesc: "私たちが制作・配信しているオリジナルシングルやアルバムをお聴きください：",
+                backBtn: "メインページに戻る",
+                copied: "✅ サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！"
+            },
+            en: {
+                title: "Studio Projects",
+                sub: "Project HUB",
+                intro: "Welcome to the Project HUB! Here you will find our active game servers, open-source Python toolkits, and our latest original music releases.",
+                pj1Title: "Minecraft Game Server",
+                pj1Desc: "Join us now! Click the button below to copy our official server connection IP and dive straight into our Minecraft community survival world.",
+                pj1Btn: "Copy Server IP (vtuber.qd.je)",
+                pj2Desc: "An advanced image counting and analysis system powered by Python. Features a highly integrated graphical user interface (GUI) to boost productivity in data analysis.",
+                pj2Btn: "GitHub Repository & Downloads",
+                pj3Desc: "A high-precision AI hand-tracking plugin customized for VSeeFace. Capture flexible and smooth hand gestures via a standard webcam without any gloves or hardware trackers.",
+                pj3Btn: "Download YiHand Tracking Plugin",
+                spotTitle: "Music Releases (Spotify)",
+                spotDesc: "Listen to our officially produced and released original singles and music collections:",
+                backBtn: "Back to Main HUB",
+                copied: "✅ Server IP (vtuber.qd.je) successfully copied to clipboard!"
+            }
+        };
+
+        // 目前語系記憶（預設台灣繁中）
+        let currentLang = 'tw';
+
+        // 核心切換引擎
+        function changeLang(langCode) {
+            currentLang = langCode;
+            const dict = i18n[langCode];
+
+            // 翻譯頁面文字
+            document.getElementById('main-title').innerText = dict.title;
+            document.getElementById('main-sub').innerText = dict.sub;
+            document.getElementById('main-intro').innerText = dict.intro;
+            
+            document.getElementById('pj1-title').innerText = dict.pj1Title;
+            document.getElementById('pj1-desc').innerText = dict.pj1Desc;
+            document.getElementById('pj1-btn').innerHTML = `<i class="fas fa-copy"></i> ${dict.pj1Btn}`;
+            
+            document.getElementById('pj2-desc').innerText = dict.pj2Desc;
+            document.getElementById('pj2-btn').innerHTML = `<i class="fab fa-github"></i> ${dict.pj2Btn}`;
+            
+            document.getElementById('pj3-desc').innerText = dict.pj3Desc;
+            document.getElementById('pj3-btn').innerHTML = `<i class="fas fa-download"></i> ${dict.pj3Btn}`;
+            
+            document.getElementById('spot-title').innerHTML = `<i class="fab fa-spotify"></i> ${dict.spotTitle}`;
+            document.getElementById('spot-desc').innerText = dict.spotDesc;
+            document.getElementById('back-btn').innerHTML = `<i class="fas fa-arrow-left"></i> ${dict.backBtn}`;
+
+            // 控制按鈕高亮樣式
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // 一鍵複製 IP 機制
+        function copyIP() {
+            navigator.clipboard.writeText("vtuber.qd.je").then(() => {
+                alert(i18n[currentLang].copied);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
