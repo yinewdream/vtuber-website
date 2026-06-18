@@ -13,6 +13,8 @@
             --dc-purple: #5865F2;
             --dark-blue: #0c4a6e;
             --gmail-red: #EA4335;
+            --heart-pink: #ec4899;
+            --mint-green: #0d9488;
         }
 
         body {
@@ -171,63 +173,53 @@
 
         /* 聯絡我們頁面排版 */
         .contact-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 25px 0;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 8px;
-            border-radius: 15px;
+            display: flex; justify-content: center; gap: 10px; margin: 25px 0;
+            background: rgba(255, 255, 255, 0.5); padding: 8px; border-radius: 15px;
         }
         .tab-btn {
-            flex: 1;
-            padding: 10px 15px;
-            border: none;
-            background: transparent;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #64748b;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            flex: 1; padding: 10px 15px; border: none; background: transparent; font-size: 1rem;
+            font-weight: bold; color: #64748b; cursor: pointer; border-radius: 10px;
+            transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .tab-btn.active {
-            background: white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+        .tab-btn.active { background: white; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .tab-btn:hover { color: var(--primary-blue); }
         .tab-btn.active.tab-dc { color: var(--dc-purple); }
         .tab-btn.active.tab-mail { color: var(--gmail-red); }
         .tab-btn.active.tab-form { color: var(--primary-blue); }
 
         .contact-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            border: 1px solid rgba(0,0,0,0.05);
-            min-height: 250px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background: white; border-radius: 20px; padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05);
+            min-height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .contact-panel { display: none; width: 100%; }
         .contact-panel.active { display: block; }
-        
         .contact-card-title { font-size: 1.5rem; font-weight: bold; margin-bottom: 10px; color: var(--dark-blue); }
         .contact-meta { font-size: 1.2rem; background: #f1f5f9; padding: 10px 20px; border-radius: 12px; font-family: monospace; margin: 15px 0; color: #334155; border: 1px dashed #cbd5e1;}
+        .form-iframe { width: 100%; height: 480px; border: none; border-radius: 12px; background: #f8fafc; }
 
-        .form-iframe {
-            width: 100%;
-            height: 480px;
-            border: none;
-            border-radius: 12px;
-            background: #f8fafc;
+        /* 🧡 心靈充電站排版 */
+        .helpline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+            text-align: left;
+        }
+        .helpline-card {
+            background: white; border-radius: 15px; padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); border-left: 5px solid var(--heart-pink);
+        }
+        .helpline-card.mint { border-left-color: var(--mint-green); }
+        .helpline-title { font-size: 1.2rem; font-weight: bold; color: var(--dark-blue); margin-bottom: 5px; }
+        .helpline-num { font-size: 1.5rem; font-weight: bold; color: var(--heart-pink); margin: 8px 0; font-family: monospace; }
+        .helpline-card.mint .helpline-num { color: var(--mint-green); }
+        .helpline-note { font-size: 0.85rem; color: #64748b; line-height: 1.4; }
+
+        .warm-banner {
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+            border: 1px solid #fbcfe8; padding: 20px; border-radius: 20px;
+            margin-bottom: 25px; color: #9d174d; font-weight: 500; line-height: 1.6;
         }
 
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.05); margin: 30px 0; }
@@ -248,6 +240,7 @@
             <div class="menu-item" onclick="showPage('list')"><i class="fas fa-user-friends"></i>大 / 小 VTuber 列表</div>
             <div class="menu-item" onclick="showPage('news')"><i class="fas fa-bullhorn"></i>最新動態公報</div>
             <div class="menu-item" onclick="showPage('contact')"><i class="fas fa-envelope"></i>商務與合作聯絡</div>
+            <div class="menu-item" onclick="showPage('care')" style="color: var(--heart-pink);"><i class="fas fa-heart"></i>心靈充電站 (求助專區)</div>
         </div>
     </nav>
 
@@ -316,6 +309,39 @@
                 </div>
             </div>
         </div>
+
+        <div id="page-care" class="page">
+            <h1>心靈充電站</h1>
+            <div class="warm-banner">
+                <i class="fas fa-mug-hot"></i> <b>親愛的夥伴：</b><br>
+                在創作、追夢或生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面這些專業的傾聽者，隨時準備用溫柔接住你。
+            </div>
+            
+            <div class="helpline-grid">
+                <div class="helpline-card">
+                    <div class="helpline-title">衛福部安心專線</div>
+                    <div class="helpline-num">1925</div>
+                    <div class="helpline-note">台灣官方全年無休、24小時免費心理諮詢專線。不論遇到什麼低潮，隨時都可以撥打。</div>
+                </div>
+                <div class="helpline-card">
+                    <div class="helpline-title">生命線專線</div>
+                    <div class="helpline-num">1995</div>
+                    <div class="helpline-note">提供24小時自殺防治與危機自殺干預，在最黑暗的時刻，電話那一頭總有人願意傾聽。</div>
+                </div>
+                <div class="helpline-card mint">
+                    <div class="helpline-title">張老師專線</div>
+                    <div class="helpline-num">1980</div>
+                    <div class="helpline-note">專門提供青少年與一般大眾的情緒疏導、心理輔導與溫暖陪伴（依據服務時間提供）。</div>
+                </div>
+                <div class="helpline-card mint">
+                    <div class="helpline-title">台灣生命線網路諮商</div>
+                    <div class="helpline-note" style="margin-top: 10px;">
+                        如果不方便講電話，可以前往 <a href="https://www.life1995.org.tw/" target="_blank" style="color: var(--mint-green); font-weight: bold;">生命線官方網站</a>，他們提供定時的線上文字對談諮商服務。
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 30px; font-size: 0.9rem; color: #64748b;"><i class="fas fa-shield-alt"></i> 本專區資訊皆為公開之台灣官方與公益機構求助管線，所有諮商對話均受隱私與法律保護。</p>
+        </div>
         
         <hr>
         <p style="font-size: 0.9rem; color: #94a3b8;">© 2026 VTuber聚集地 - 網站測試中</p>
@@ -327,7 +353,6 @@
         const DISCORD_SERVER_ID_1 = "123456789012345678"; 
         const DISCORD_SERVER_ID_2 = "876543210987654321"; 
 
-        // 🛡️ 完美填入小揖專屬的 Google 嵌入式安全表單網址
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
 
         function toggleMenu() {
