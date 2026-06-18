@@ -27,10 +27,10 @@
             position: relative; overflow-x: hidden; background-color: #f0f9ff;
         }
 
+        /* 這裡維持主頁與全站純色質感背景 */
         .fullscreen-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background-attachment: fixed; background-position: center; background-repeat: no-repeat; background-size: cover;
-            transition: background-image 0.5s ease-in-out;
+            background-color: #f0f9ff;
         }
 
         .global-lang-switcher {
@@ -76,7 +76,7 @@
 
         .container {
             width: 90%; max-width: 720px; padding: 40px; background: rgba(255, 255, 255, 0.83);
-            border-radius: 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); backdrop-filter: blur(15px);
+            border-radius: 30px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05); backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.6); text-align: center; margin: 60px 0; z-index: 10;
         }
 
@@ -99,14 +99,18 @@
         .btn-pink { background-color: var(--heart-pink); }
         .btn-mc { background-color: var(--mc-green); }
 
+        /* 👥 VTuber 列表排版（把頭銜標籤與大頭貼樣式全部補回） */
         .vtuber-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
         .vtuber-card {
             background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 25px 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.7); text-align: center; transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.7); text-align: center; transition: transform 0.2s; position: relative;
         }
         .vtuber-card:hover { transform: translateY(-5px); }
+        .vtuber-title-tag { display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 0.75rem; font-weight: bold; padding: 3px 10px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #bae6fd; }
+        .vtuber-avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 3px solid #bae6fd; margin-bottom: 12px; background-color: #f1f5f9; }
         .vtuber-name { font-size: 1.3rem; font-weight: bold; color: var(--dark-blue); margin: 5px 0 8px 0; }
         .vtuber-desc { font-size: 0.9rem; color: #475569; min-height: 40px; margin-bottom: 15px; line-height: 1.4; }
+        .btn-sm-yt { display: inline-flex; align-items: center; justify-content: center; background: var(--yt-red); color: white; text-decoration: none; padding: 8px 18px; border-radius: 10px; font-size: 0.85rem; font-weight: bold; }
 
         .dc-news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 25px; }
         .dc-box { background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); }
@@ -234,7 +238,7 @@
                 </div>
                 <div id="contact-mail" class="contact-panel">
                     <div class="contact-card-title" id="c-mail-title"><i class="fas fa-envelope" style="color:var(--gmail-red)"></i> 最高負責人電子信箱</div>
-                    <p id="c-mail-desc">如有重大商務合作、活動邀約或版權事宜，請寄信至專屬 CEO 信箱：</p>
+                    <p id="c-mail-desc">如有重大商務合作、活動邀約 or 版權事宜，請寄信至專屬 CEO 信箱：</p>
                     <div class="contact-meta">ceo@vtuber.qd.je</div>
                     <a href="mailto:ceo@vtuber.qd.je" class="btn" id="c-mail-btn" style="background-color:var(--gmail-red); display:inline-flex;"><i class="fas fa-paper-plane"></i> 立即撰寫郵件</a>
                 </div>
@@ -275,7 +279,6 @@
     </div>
 
     <script>
-        const BACKGROUND_CONFIG_URL = "https://docs.google.com/spreadsheets/d/1v-ctCZcRr_rGwTMlC2FphlyuRvW5cfSub44yyTklWO0/gviz/tq?tqx=out:csv";
         const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1iaEgVqq3hUeSAD1cTIjPPONN0jd9SzYO4q40mixAb6E/gviz/tq?tqx=out:csv";
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
         const GOOGLE_CARE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeUpky7LhO2KNyvr64R0nYbbQh-qMw9ouI-1nzKzmE4aG1hzA/viewform?embedded=true";
@@ -283,73 +286,54 @@
         const DC_WIDGET_1_URL = "https://discord.com/widget?id=1321791530965373009&theme=dark";
         const DC_WIDGET_2_URL = "https://discord.com/widget?id=1334057866504503348&theme=dark";
 
-        let bgCache = {
-            home: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1920",
-            list: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920",
-            news: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=1920",
-            mc: "https://images.unsplash.com/photo-1607988795691-3d0147b43231?q=80&w=1920",
-            contact: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920",
-            care: "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920"
-        };
-
-        async function loadBackgroundsFromSpreadsheet() {
-            try {
-                const response = await fetch(BACKGROUND_CONFIG_URL);
-                const data = await response.text();
-                const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
-                
-                lines.forEach((line, index) => {
-                    if (index === 0) return;
-                    const cols = parseCSVLine(line);
-                    if(cols.length >= 2) {
-                        const pageId = cols[0].replace(/^"|"$/g, '').trim().toLowerCase();
-                        const imgUrl = cols[1].replace(/^"|"$/g, '').trim();
-                        if(bgCache[pageId] !== undefined && imgUrl !== "") {
-                            bgCache[pageId] = imgUrl;
-                            if (pageId === 'home') {
-                                updateBackground('home');
-                            }
-                        }
-                    }
-                });
-                const currentActivePage = document.querySelector('.page.active').id.replace('page-', '');
-                updateBackground(currentActivePage);
-            } catch (e) {
-                console.log("後台讀取失敗", e);
-                updateBackground('home');
-            }
-        }
-
-        function updateBackground(pageId) {
-            const bgElement = document.getElementById('dynamic-bg');
-            const targetImg = bgCache[pageId] || bgCache['home'];
-            bgElement.style.backgroundImage = `linear-gradient(135deg, rgba(240, 249, 255, 0.72) 0%, rgba(224, 242, 254, 0.72) 100%), url('${targetImg}')`;
-        }
-
         const mainI18n = {
             tw: {
                 navTitle: "VTuber 聚集地", home: "基地首頁", list: "大 / 小 VTuber 列表", news: "最新動態公報", contact: "商務與合作聯絡", pj: "工作室專案頁面 (pj)", care: "心靈充電站 (求助專區)", mc: "Minecraft 伺服器",
                 badge: "官網改版中", hTitle: "VTuber 工作室", hDesc: "歡迎來到Vtuber的基地！小揖正在對官網進行升級。我們將在這裡聚集大、小Vtuber，並分享最新的 V 藝人動態與創作連結。",
+                lTitle: "成員名單", lSub: "聚集在此的大、小 VTuber 藝人夥伴", lLoad: "資料同步中...",
+                nTitle: "最新動態公報", nSub: "即時連線兩個 Discord 官方公告頻道", nb1: "主要討論群公告", nb2: "粉絲聚集地公告",
+                cTitle: "商務與合作聯絡", cSub: "請選擇您方便的聯絡管道，總裁與內勤團隊將會儘速回覆！", tabForm: "網頁直接留言", cdcT: "Discord 聯絡資訊", cdcD: "歡迎加入我們的 Discord 伺服器，或直接私訊創辦人帳號：", cdcB: "進入 Discord 伺服器", cmailT: "最高負責人電子信箱", cmailD: "如有重大商務合作、活動邀約或版權事宜，請寄信至專屬 CEO 信箱：", cmailB: "立即撰寫郵件",
+                carT: "心靈充電站", carB: "<i class='fas fa-mug-hot'></i> <b>親愛的夥伴：</b><br>在創作、追夢 or 生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面這些專業的傾聽者，隨時準備用溫柔接住你。",
+                hlt1: "衛福部安心專線", hln1: "台灣官方24小時免費諮詢專線。不論遇到什麼低潮，隨時都可以撥打。", hlt2: "生命線專線", hln2: "提供24小時自殺防治與危機干預，在最黑暗的時刻，電話那一頭總有人願意傾聽。",
+                boxT: "寫封信給基地總裁", boxD: "如果你不習慣聯絡外面的機構，只想把心事留在這裡，可以點擊下方按鈕。這是一個完全獨立的匿名留言樹洞，你可以放心寫下任何痛苦或創傷，我們會用最溫暖的心讀完它。", boxB: "開啟匿名傾訴樹洞", carF: "本專區資訊皆為公開之台灣官方與公益機構求助管線，所有諮商對話均受隱私與法律保護。",
                 mcT: "Minecraft 伺服器基地", mcSub: "小揖打造的專屬方塊社群！歡迎複製下方 IP 進入世界：", mcBtn: "複製官方連線 IP (vtuber.qd.je)", mcTipT: "伺服器遊玩守則：", mcTipB: "本伺服器整合了 SRV 頂級域名對接，保證連線流暢。請各位夥伴進入伺服器時保持友善、尊重他人建築、嚴禁使用外掛非法破壞，讓我們一起創造最棒的麥塊世界！",
-                copied: "✅ Minecraft 伺服器 IP (vtuber.qd.je) 已成功複製到剪貼簿！"
+                copied: "✅ Minecraft 伺服器 IP (vtuber.qd.je) 已成功複製到剪貼簿！", gotoYT: "前往頻道", defaultTitle: "成員"
             },
             cn: {
                 navTitle: "VTuber 聚集地", home: "基地首页", list: "大 / 小 VTuber 列表", news: "最新动态公报", contact: "商务与合作联络", pj: "工作室专案页面 (pj)", care: "心灵充电站 (求助专区)", mc: "Minecraft 服务器",
                 badge: "官网改版中", hTitle: "VTuber 工作室", hDesc: "欢迎来到Vtuber的基地！小揖正在对官网进行升级。我们将在这里聚集大、小Vtuber，并分享最新的 V 艺人动态与创作链接。",
+                lTitle: "成员名单", lSub: "聚集在此的大、小 VTuber 艺人伙伴", lLoad: "资料同步中...",
+                nTitle: "最新动态公报", nSub: "即时连线两个 Discord 官方公告频道", nb1: "主要讨论群公告", nb2: "粉丝聚集地公告",
+                cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约或版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
+                carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。当世界太过沉重时，请记得给自己一个喘息的空间，下面这些专业的倾听者，随时准备用温柔接住你。",
+                hlt1: "卫福部安心专线", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
+                boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆为公开之台湾官方与公益机构求助管线，所有咨询对话均受隐私与法律保护。",
                 mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
-                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪贴簿！"
+                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪贴簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
             jp: {
                 navTitle: "VTuber HUB", home: "ホーム", list: "VTuber 一覧", news: "最新アナウンス", contact: "ビジネス・お問合せ", pj: "プロジェクト (pj)", care: "メンタルケア相談窓口", mc: "マイクラサーバー",
                 badge: "リニューアル中", hTitle: "VTuber スタジオ", hDesc: "VTuber基地へようこそ！現在サイトのアップグレードを行っています。ここでは大・小のVTuberを集め、最新の活動動向や創作リンクを共有していきます。",
+                lTitle: "メンバー一覧", lSub: "ここに集う大・小のVTuberパートナーたち", lLoad: "同期中...",
+                nTitle: "最新アナウンス", nSub: "2つのDiscord公式告知チャンネルとリアルタイム接続", nb1: "メインサーバー告知", nb2: "ファンサーバー告知",
+                cTitle: "ビジネス・お問合せ", cSub: "ご都合の良い連絡方法をお選びください。確認次第、迅速に返信いたします。", tabForm: "サイトから直接伝言", cdcT: "Discord 連絡先", cdcD: "公式Discordサーバーに参加するか、創設者アカウントに直接DMをお送りください：", cdcB: "Discordサーバーに入る", cmailT: "最高責任者メールアドレス", cmailD: "重要なビジネス提携、イベントの依頼、または著作権関連については、CEO専用メールアドレスまでご連絡ください：", cmailB: "メールを作成する",
+                carT: "メンタルケア相談窓口", carB: "<i class='fas fa-mug-hot'></i> <b>親愛なるパートナーへ：</b><br>創作や追夢、あるいは日々の生活の中で、疲れやつらさを感じても大丈夫です。ここは安全な心の拠り所です。世界が重苦しく感じられたら、一呼吸置いてください。以下の専門家がいつでもあなたを温かく受け止める準備をしています。",
+                hlt1: "安心相談ホットライン", hln1: "台湾政府による24時間年中無休の無料心理カウンセリング。どのような悩みでも、いつでもお電話いただけます。", hlt2: "生命の電話", hln2: "24時間対応の危機介入サービス。最も暗い瞬間にも、電話の向こうであなたの声に耳を傾ける人が必ずいます。",
+                boxT: "代表へ手紙を書く", boxD: "外部の機関に連絡するのに抵抗があり、ここだけに気持ちを残したい場合は、下のボタンをクリックしてください。完全匿名のメッセージボックスです。どんな苦しみや傷でも安心してお書きください。温かい心で拝読いたします。", boxB: "匿名メッセージを開く", carF: "※このエリアの情報は台湾の公的機関および公益団体の相談窓口です。すべてのカウンセリングはプライバシーと法律によって保護されています。",
                 mcT: "Minecraft サーバー基地", mcSub: "XiaoYiが贈る特別なブロックコミュニティ！IPをコピーして世界へ参加しましょう：", mcBtn: "公式接続IPをコピー (vtuber.qd.je)", mcTipT: "サーバー利用規約：", mcTipB: "当サーバーは最高水準のSRVドメイン連携により快適な接続を保証しています。マナーを守り、他人の建築を尊重し、チートや荒らし行為は絶対にお控えください。みんなで最高のマイクラ世界を作りましょう！",
-                copied: "✅ Minecraft サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！"
+                copied: "✅ Minecraft サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！", gotoYT: "チャンネルへ", defaultTitle: "メンバー"
             },
             en: {
                 navTitle: "VTuber HUB", home: "Home HUB", list: "VTuber Members", news: "Latest Bulletins", contact: "Business & Contact", pj: "Project Page (pj)", care: "Mental Care Station", mc: "Minecraft Server",
                 badge: "Under Upgrade", hTitle: "VTuber Studio", hDesc: "Welcome to the VTuber Base! We are currently upgrading our website to gather both major and minor VTubers, sharing their latest updates and creative links.",
+                lTitle: "Member Roster", lSub: "The major and minor VTuber talents gathered here", lLoad: "Syncing Roster...",
+                nTitle: "Latest Bulletins", nSub: "Real-time feeds from our two official Discord announcement channels", nb1: "Main Server News", nb2: "Fan Server News",
+                cTitle: "Business & Contacts", cSub: "Please choose your preferred communication channel, our executive team will respond as soon as possible!", tabForm: "Leave a Message", cdcT: "Discord Contact Info", cdcD: "Welcome to join our Discord server or send a direct message to the founder's account:", cdcB: "Join Discord Server", cmailT: "Executive Office Email", cmailD: "For major business collaborations, event invitations, or copyright inquiries, please email our dedicated CEO inbox:", cmailB: "Compose Email",
+                carT: "Mental Care Station", carB: "<i class='fas fa-mug-hot'></i> <b>Dear Partner:</b><br>It is completely okay to feel tired or hurt on your journey of creation, chasing dreams, or daily life. This is a safe space for you. When the world feels too heavy, remember to give yourself room to breathe. The professional listeners below are always ready to support you with warmth.",
+                hlt1: "MOHW Reassurance Hotline", hln1: "Taiwan official 24/7 free psychological counseling hotline. Feel free to call whenever you face a low point.", hlt2: "Lifeline Association", hln2: "Provides 24-hour crisis intervention. In the darkest moments, there is always someone ready to listen on the other end.",
+                boxT: "Write to the Studio President", boxD: "If you prefer not to contact external institutions and just want to leave your thoughts here, click below. This is a completely independent, anonymous confession box. You can safely share any pain or trauma; we will read it with the utmost care.", boxB: "Open Anonymous Box", carF: "Note: The resources in this section are public consultation hotlines provided by Taiwan official and charitable organizations. All conversations are protected by privacy and law.",
                 mcT: "Minecraft Server Base", mcSub: "The exclusive block community crafted by XiaoYi! Copy the IP to join our world:", mcBtn: "Copy Official Connection IP (vtuber.qd.je)", mcTipT: "Server Regulations:", mcTipB: "This server integrates high-performance SRV domain routing to ensure smooth gameplay. Please stay friendly, respect others' builds, and strictly prohibit hacks or griefing. Let's build an amazing Minecraft world together!",
-                copied: "✅ Minecraft Server IP (vtuber.qd.je) successfully copied to clipboard!"
+                copied: "✅ Minecraft Server IP (vtuber.qd.je) successfully copied to clipboard!", gotoYT: "Visit Channel", defaultTitle: "Member"
             }
         };
 
@@ -371,6 +355,10 @@
             document.getElementById('home-title').innerText = dict.hTitle;
             document.getElementById('home-desc').innerText = dict.hDesc;
 
+            document.getElementById('list-title').innerText = dict.lTitle;
+            document.getElementById('list-subtitle').innerText = dict.lSub;
+            if(document.getElementById('list-loading')) { document.getElementById('list-loading').innerText = dict.lLoad; }
+
             document.getElementById('mc-title').innerText = dict.mcT;
             document.getElementById('mc-subtitle').innerText = dict.mcSub;
             document.getElementById('mc-btn-copy').innerHTML = `<i class="fas fa-copy"></i> ${dict.mcBtn}`;
@@ -379,6 +367,8 @@
 
             document.querySelectorAll('.global-lang-switcher .lang-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
+
+            if(window.currentVTubersData) { renderVTubers(window.currentVTubersData); }
         }
 
         function toggleMenu() {
@@ -390,7 +380,6 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(`page-${pageId}`).classList.add('active');
             
-            updateBackground(pageId);
             toggleMenu();
 
             if(pageId === 'list') { fetchVTubers(); }
@@ -437,23 +426,44 @@
                 const response = await fetch(SPREADSHEET_CSV_URL);
                 const data = await response.text();
                 const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
-                renderVTubers(lines.slice(1));
-            } catch (error) { console.log(error); }
+                window.currentVTubersData = lines.slice(1);
+                
+                if (window.currentVTubersData.length === 0) {
+                    document.getElementById('vtuber-container').innerHTML = '<p style="color:#94a3b8;">No members found.</p>';
+                    return;
+                }
+                renderVTubers(window.currentVTubersData);
+            } catch (error) { 
+                document.getElementById('vtuber-container').innerHTML = '<p style="color:#ef4444;">❌ Error loading backend data!</p>'; 
+            }
         }
 
+        /* 👥 完美加回：後台大頭貼、圖片標籤、前往頻道的完整渲染機制 */
         function renderVTubers(rows) {
-            const container = document.getElementById('vtuber-container'); container.innerHTML = '';
+            const container = document.getElementById('vtuber-container'); 
+            container.innerHTML = '';
+            const dict = mainI18n[currentGlobalLang];
+            const defaultAvatar = "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150";
+
             rows.forEach(row => {
                 const cols = parseCSVLine(row);
-                if (cols.length >= 2 && cols[1] !== "") {
-                    container.innerHTML += `<div class="vtuber-card"><div class="vtuber-name">${cols[1]}</div><div class="vtuber-desc">${cols[4] || ''}</div></div>`;
+                if (cols.length >= 5 && cols[1] !== "") {
+                    let [title, name, image, youtube, description] = cols;
+                    image = image.replace(/^"|"$/g, ''); 
+                    youtube = youtube.replace(/^"|"$/g, '');
+                    const finalTitle = title || dict.defaultTitle;
+
+                    container.innerHTML += `
+                        <div class="vtuber-card">
+                            <div class="vtuber-title-tag">${finalTitle}</div><br>
+                            <img src="${image || defaultAvatar}" class="vtuber-avatar" onerror="this.src='${defaultAvatar}'" alt="${name}">
+                            <div class="vtuber-name">${name}</div>
+                            <div class="vtuber-desc">${description}</div>
+                            <a href="${youtube || '#'}" target="_blank" class="btn-sm-yt"><i class="fab fa-youtube"></i> ${dict.gotoYT}</a>
+                        </div>`;
                 }
             });
         }
-
-        window.onload = () => {
-            loadBackgroundsFromSpreadsheet();
-        };
     </script>
 </body>
 </html>
