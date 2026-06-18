@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTuber 工作室官方網站</title>
+    
+    <!-- 🔱 這裡就是把瀏覽器分頁圖示（Favicon）換成三叉戟 Logo 的關鍵標籤 -->
+    <link rel="icon" type="image/png" href="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
@@ -59,7 +63,6 @@
         .sidebar.active { left: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid #bae6fd; padding-bottom: 15px; }
         
-        /* 側邊欄 Logo 樣式 */
         .sidebar-logo-img { width: 28px; height: 28px; object-fit: contain; vertical-align: middle; margin-right: 6px; }
         .sidebar-title { font-size: 1.2rem; font-weight: bold; color: var(--primary-blue); display: flex; align-items: center; }
         
@@ -83,9 +86,9 @@
             border: 1px solid rgba(255, 255, 255, 0.6); text-align: center; margin: 60px 0; z-index: 10;
         }
 
-        /* 主頁大 Logo 樣式 */
+        /* 🔱 這裡把大 Logo 寬度放大到 200px 囉！ */
         .main-logo-img {
-            width: 140px; height: auto; object-fit: contain; margin: 0 auto 20px auto; display: block;
+            width: 200px; height: auto; object-fit: contain; margin: 0 auto 20px auto; display: block;
             filter: drop-shadow(0 8px 16px rgba(3, 105, 161, 0.15));
         }
 
@@ -169,7 +172,6 @@
 
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <!-- 🔱 選單頂部加入小 Logo -->
             <span class="sidebar-title" id="nav-header-title">
                 <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" class="sidebar-logo-img" alt="Logo">
                 VTuber 聚集地
@@ -189,7 +191,6 @@
 
     <div class="container">
         <div id="page-home" class="page active">
-            <!-- 🔱 首頁大廳加入大 Logo 標籤 -->
             <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" class="main-logo-img" alt="Studio Logo">
             
             <div class="status-badge" id="home-badge"><i class="fas fa-tools"></i> 官網改版中</div>
@@ -308,7 +309,7 @@
                 lTitle: "成員名單", lSub: "聚集在此的大、小 VTuber 藝人夥伴", lLoad: "資料同步中...",
                 nTitle: "最新動態公報", nSub: "即時連線兩個 Discord 官方公告頻道", nb1: "主要討論群公告", nb2: "粉絲聚集地公告",
                 cTitle: "商務與合作聯絡", cSub: "請選擇您方便的聯絡管道，總裁與內勤團隊將會儘速回覆！", tabForm: "網頁直接留言", cdcT: "Discord 聯絡資訊", cdcD: "歡迎加入我們的 Discord 伺服器，或直接私訊創辦人帳號：", cdcB: "進入 Discord 伺服器", cmailT: "最高負責人電子信箱", cmailD: "如有重大商務合作、活動邀約或版權事宜，請寄信至專屬 CEO 信箱：", cmailB: "立即撰寫郵件",
-                carT: "心靈充電站", carB: "<i class='fas fa-mug-hot'></i> <b>親愛的夥伴：</b><br>在創作、追夢 or 生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面這些專業的傾聽者，隨時準備用溫柔接住你。",
+                carT: "心靈充電站", carB: "<i class='fas fa-mug-hot'></i> <b>親愛的夥伴：</b><br>在創作、追夢 or 生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面職些專業的傾聽者，隨時準備用溫柔接住你。",
                 hlt1: "衛福部安心專線", hln1: "台灣官方24小時免費諮詢專線。不論遇到什麼低潮，隨時都可以撥打。", hlt2: "生命線專線", hln2: "提供24小時自殺防治與危機干預，在最黑暗的時刻，電話那一頭總有人願意傾聽。",
                 boxT: "寫封信給基地總裁", boxD: "如果你不習慣聯絡外面的機構，只想把心事留在這裡，可以點擊下方按鈕。這是一個完全獨立的匿名留言樹洞，你可以放心寫下任何痛苦或創傷，我們會用最溫暖的心讀完它。", boxB: "開啟匿名傾訴樹洞", carF: "本專區資訊皆為公開之台灣官方與公益機構求助管線，所有諮商對話均受隱私與法律保護。",
                 mcT: "Minecraft 伺服器基地", mcSub: "小揖打造的專屬方塊社群！歡迎複製下方 IP 進入世界：", mcBtn: "複製官方連線 IP (vtuber.qd.je)", mcTipT: "伺服器遊玩守則：", mcTipB: "本伺服器整合了 SRV 頂級域名對接，保證連線流暢。請各位夥伴進入伺服器時保持友善、尊重他人建築、嚴禁使用外掛非法破壞，讓我們一起創造最棒的麥塊世界！",
@@ -322,7 +323,7 @@
                 cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约或版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
                 carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。当世界太过沉重时，请记得给自己一个喘息的空间，下面这些专业的倾听者，随时准备用温柔接住你。",
                 hlt1: "卫福部安心专线", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
-                boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆為公开之台湾官方与公益机构求助管线，所有咨询对话均受隐私与法律保护。",
+                boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆為公开之台湾官方与公益机构求助管線，所有咨询对话均受隐私与法律保护。",
                 mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
                 copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪贴簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
@@ -358,7 +359,6 @@
             currentGlobalLang = langCode;
             const dict = mainI18n[langCode];
 
-            // 🌟 多語系同步更新側邊欄 Logo 與標題
             document.getElementById('nav-header-title').innerHTML = `
                 <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" class="sidebar-logo-img" alt="Logo">
                 ${dict.navTitle}
