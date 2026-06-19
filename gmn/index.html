@@ -24,15 +24,18 @@
             overflow: hidden;
         }
 
+        /* 頂部導覽列與金鑰設定 */
         .top-nav {
             width: 100%;
             padding: 15px 25px;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
+            align-items: center;
             position: fixed;
             top: 0;
             left: 0;
             z-index: 50;
+            box-sizing: border-box;
         }
         .back-home-btn {
             background: rgba(255, 255, 255, 0.8);
@@ -53,11 +56,43 @@
             color: white;
         }
 
+        /* 金鑰設定輸入欄 */
+        .key-config-box {
+            display: flex;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 6px 12px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(3, 105, 161, 0.1);
+        }
+        .key-config-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 0.85rem;
+            width: 160px;
+            color: #1e293b;
+        }
+        .key-save-btn {
+            background: #0369a1;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .key-save-btn:hover { background: #0c4a6e; }
+
         .chat-container {
             width: 100%;
             max-width: 750px;
             flex-grow: 1;
-            margin-top: 70px;
+            margin-top: 80px;
             margin-bottom: 110px;
             padding: 20px;
             overflow-y: auto;
@@ -170,6 +205,12 @@
 
     <div class="top-nav">
         <a href="../" class="back-home-btn"><i class="fas fa-arrow-left"></i> 返回基地首頁</a>
+        
+        <!-- 🔑 網頁端金鑰自主儲存箱 -->
+        <div class="key-config-box">
+            <input type="password" id="api-key-input" placeholder="請貼上 Gemini API Key...">
+            <button class="key-save-btn" onclick="saveApiKey()">儲存</button>
+        </div>
     </div>
 
     <div class="chat-container" id="chat-box">
@@ -187,19 +228,43 @@
     </div>
 
     <script>
-        // 🔑 你的新型 AQ 金鑰
-        const GEMINI_API_KEY = "AQ.Ab8RN6JHmfNtrbDkCqwk5n6QDeAJV6yEVCBvjD9Cc7GwC4DwSQ"; 
-        
-        // 📡 🌟 關鍵修正：將金鑰從 URL 網址尾巴移除，避免被 Google 退件
+        // 📡 標準 API 連線路由
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
 
         let conversationHistory = [];
+
+        // 網頁一打開，自動讀取以前儲存過的金鑰
+        window.onload = () => {
+            const savedKey = localStorage.getItem('user_gemini_api_key');
+            if (savedKey) {
+                document.getElementById('api-key-input').value = savedKey;
+            }
+        };
+
+        function saveApiKey() {
+            const keyVal = document.getElementById('api-key-input').value.trim();
+            if (keyVal) {
+                localStorage.setItem('user_gemini_api_key', keyVal);
+                alert("🔒 API 金鑰已安全記在您的瀏覽器中囉！");
+            } else {
+                localStorage.removeItem('user_gemini_api_key');
+                alert("ℹ️ 已清除金鑰。");
+            }
+        }
 
         function handleKeyPress(event) {
             if (event.key === 'Enter') { sendMessage(); }
         }
 
         async function sendMessage() {
+            // 動態從密碼箱抓取金鑰
+            const currentApiKey = localStorage.getItem('user_gemini_api_key') || document.getElementById('api-key-input').value.trim();
+            
+            if (!currentApiKey) {
+                alert("⚠️ 請先在網頁右上角貼上您的 Gemini API Key 並點擊儲存，才能開始聊天喔！");
+                return;
+            }
+
             const inputElement = document.getElementById('user-input');
             const sendBtn = document.getElementById('send-button');
             const prompt = inputElement.value.trim();
@@ -222,13 +287,19 @@
             const thinkingId = appendMessage('model', `<i class="fas fa-spinner fa-spin"></i> Gemini 正在思考中...`);
 
             try {
-                const response = await fetch(GEMINI_API_URL, {
+                // 🔄 這裡會根據金鑰開頭自動切換最精準的相容性 Header
+                let requestHeaders = { 'Content-Type': 'application/json' };
+                let fetchUrl = GEMINI_API_URL;
+
+                if (currentApiKey.startsWith('AQ.')) {
+                    requestHeaders['X-Goog-Api-Key'] = currentApiKey;
+                } else {
+                    fetchUrl = `${GEMINI_API_URL}?key=${currentApiKey}`;
+                }
+
+                const response = await fetch(fetchUrl, {
                     method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        // 🌟 核心防護：改用符合 2026 最新規格的 Header 夾帶法傳送新型金鑰
-                        'X-Goog-Api-Key': GEMINI_API_KEY 
-                    },
+                    headers: requestHeaders,
                     body: JSON.stringify({
                         contents: conversationHistory,
                         systemInstruction: {
@@ -241,7 +312,7 @@
                 
                 if (data.error) {
                     console.error("Google API 傳回錯誤：", data.error);
-                    document.getElementById(thinkingId).innerHTML = `❌ 金鑰驗證失敗：${data.error.message}`;
+                    document.getElementById(thinkingId).innerHTML = `❌ 連線失敗：${data.error.message}<br><small style="color:#94a3b8">請檢查右上角金鑰是否複製完整</small>`;
                     return;
                 }
                 
