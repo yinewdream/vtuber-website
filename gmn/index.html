@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>問問 Gemini - 個人化智慧服務</title>
     
-    <!-- 🔱 完美同步主站的三叉戟 Favicon -->
     <link rel="icon" type="image/png" href="../Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -203,10 +202,18 @@
 </head>
 <body>
 
+    <script>
+        // 💣 防扒專用：網域鎖定自毀炸彈
+        if (window.location.hostname !== "vtuber.qd.je" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            alert("⚠️ 偵測到非法盜用原始碼！本網頁由小揖(Λnewdream)原創開發，拒絕抄襲！");
+            document.body.innerHTML = "<div style='color:red; text-align:center; margin-top:30vh; font-family:sans-serif;'><h1>❌ 尊重原創，反對無腦抄襲！</h1><p style='color:#64748b; font-size:1.2rem;'>本專案原始碼隸屬於 小揖 (Λnewdream) 所有。</p></div>";
+            window.stop(); // 強行停止後續所有腳本載入
+        }
+    </script>
+
     <div class="top-nav">
         <a href="../" class="back-home-btn"><i class="fas fa-arrow-left"></i> 返回基地首頁</a>
         
-        <!-- 🔑 網頁端金鑰自主儲存箱 -->
         <div class="key-config-box">
             <input type="password" id="api-key-input" placeholder="請貼上 Gemini API Key...">
             <button class="key-save-btn" onclick="saveApiKey()">儲存</button>
@@ -233,7 +240,6 @@
 
         let conversationHistory = [];
 
-        // 網頁一打開，自動讀取以前儲存過的金鑰
         window.onload = () => {
             const savedKey = localStorage.getItem('user_gemini_api_key');
             if (savedKey) {
@@ -257,7 +263,6 @@
         }
 
         async function sendMessage() {
-            // 動態從密碼箱抓取金鑰
             const currentApiKey = localStorage.getItem('user_gemini_api_key') || document.getElementById('api-key-input').value.trim();
             
             if (!currentApiKey) {
@@ -287,7 +292,6 @@
             const thinkingId = appendMessage('model', `<i class="fas fa-spinner fa-spin"></i> Gemini 正在思考中...`);
 
             try {
-                // 🔄 這裡會根據金鑰開頭自動切換最精準的相容性 Header
                 let requestHeaders = { 'Content-Type': 'application/json' };
                 let fetchUrl = GEMINI_API_URL;
 
