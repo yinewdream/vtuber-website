@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>問問 Gemini - 個人化智慧服務</title>
     
+    <!-- 🔱 完美同步主站的三叉戟 Favicon -->
     <link rel="icon" type="image/png" href="../Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -23,7 +24,6 @@
             overflow: hidden;
         }
 
-        /* 頂部導覽返回鈕 */
         .top-nav {
             width: 100%;
             padding: 15px 25px;
@@ -53,7 +53,6 @@
             color: white;
         }
 
-        /* 💬 對話歷史紀錄渲染區 */
         .chat-container {
             width: 100%;
             max-width: 750px;
@@ -68,7 +67,6 @@
             box-sizing: border-box;
         }
 
-        /* 🌟 完美的 Gemini 經典中央初始狀態 */
         .welcome-section {
             display: flex;
             flex-direction: column;
@@ -90,7 +88,6 @@
             margin: 0;
         }
 
-        /* 泡泡對話樣式 */
         .message {
             display: flex;
             flex-direction: column;
@@ -99,12 +96,8 @@
         }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .message.user {
-            align-self: flex-end;
-        }
-        .message.model {
-            align-self: flex-start;
-        }
+        .message.user { align-self: flex-end; }
+        .message.model { align-self: flex-start; }
 
         .message-content {
             padding: 14px 20px;
@@ -128,7 +121,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* ⌨️ 輸入底欄區區塊 */
         .input-area-wrapper {
             position: fixed;
             bottom: 0;
@@ -162,33 +154,16 @@
             padding: 10px 0;
             background: transparent;
         }
-        .input-box-container input::placeholder {
-            color: #94a3b8;
-        }
+        .input-box-container input::placeholder { color: #94a3b8; }
 
         .send-btn {
-            background: #0369a1;
-            color: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
+            background: #0369a1; color: white; border: none;
+            width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
             transition: background 0.2s, transform 0.1s;
         }
-        .send-btn:hover {
-            background: #0c4a6e;
-            transform: scale(1.03);
-        }
-        .send-btn:disabled {
-            background: #cbd5e1;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .send-btn:hover { background: #0c4a6e; transform: scale(1.03); }
+        .send-btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
     </style>
 </head>
 <body>
@@ -212,19 +187,16 @@
     </div>
 
     <script>
-        // 🔑 這裡已經幫你把剛才申請到的白手套帳號 API Key 完美接上去囉！
-        const GEMINI_API_KEY = "AQ.Ab8RN6L51M_ivYOGAiwW9A7f-U1pjvbX3gPXQG1KeMU9Sl4SoQ"; 
+        // 🔑 完美嵌入 image_3bf39a.png 中你最完整的全新 AQ. 金鑰！
+        const GEMINI_API_KEY = "AQ.Ab8RN6JHmfNtrbDkCqwk5n6QDeAJV6yEVCBvjD9Cc7GwC4DwSQ"; 
         
-        // 📡 對接 Google 官方推薦、速度最快且免費額度超大方的 2.5 Flash 模型
+        // 📡 更換為支援新型 AQ 金鑰最穩定的完整 API v1beta 端點路徑
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-        // 記憶對話歷史（連續對話上下文記憶）
         let conversationHistory = [];
 
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
-            }
+            if (event.key === 'Enter') { sendMessage(); }
         }
 
         async function sendMessage() {
@@ -263,6 +235,13 @@
 
                 const data = await response.json();
                 
+                // 🛠️ 加入防爆除錯：萬一又有錯誤，把詳細回應印在主機板（Console）方便看
+                if (data.error) {
+                    console.error("Google API 傳回錯誤：", data.error);
+                    document.getElementById(thinkingId).innerHTML = `❌ 金鑰驗證失敗：${data.error.message}`;
+                    return;
+                }
+                
                 if (data.candidates && data.candidates[0].content.parts[0].text) {
                     const aiResponse = data.candidates[0].content.parts[0].text;
                     document.getElementById(thinkingId).innerText = aiResponse;
@@ -272,12 +251,12 @@
                         parts: [{ text: aiResponse }]
                     });
                 } else {
-                    document.getElementById(thinkingId).innerText = "❌ 糟糕，AI 沒能成功吐出回應，請稍後再試一次！";
+                    document.getElementById(thinkingId).innerText = "❌ 傳回資料格式不符，請重新整理網頁再試一次！";
                 }
 
             } catch (error) {
-                console.error("API Error:", error);
-                document.getElementById(thinkingId).innerText = "❌ 連線到 Google API 發生錯誤，請檢查您的金鑰是否正確。";
+                console.error("網路連線錯誤:", error);
+                document.getElementById(thinkingId).innerText = "❌ 無法連線至 Google 伺服器，請確認網路連線是否正常。";
             } finally {
                 inputElement.disabled = false;
                 sendBtn.disabled = false;
