@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大成國中學生權利委員會</title>
+    <title>大成國中學生自治權利保護委員會</title>
     <!-- 引入 Google 字體與 Icon -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -94,10 +94,19 @@
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 900;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .en-title {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .badge {
@@ -176,7 +185,8 @@
             <div class="logo-container">
                 <img src="logo-student.png" alt="Logo" class="logo-img" id="webLogo">
             </div>
-            <h1 id="orgName">大成國中學生權利委員會</h1>
+            <h1 id="orgName">大成國中學生自治權利保護委員會</h1>
+            <div class="en-title" id="orgEnName">Student Autonomy Rights Protection Committee (SARPC)</div>
             <div class="badge" id="orgBadge">學生自主平台</div>
         </header>
 
@@ -187,7 +197,7 @@
                     <span id="sectionTitle">核心宗旨宣言</span>
                 </h2>
                 <p id="coreConcept">
-                    我們是屬於大成國中學生自己的獨立發聲平台！本會秉持「學生主體、權益自主」之精神，打破校園不對等的權力結構。我們將透過匿名揭露、數據調查與法規監督，捍衛每位學生的身體自主權、受教權與表達自由，拒絕任何違法、不合理的黑心校規與管教！
+                    我們是屬於大成國中學生自己的獨立發聲平台！本會下設「學生權利委員會 (SRC)」與「學生權利保護委員會 (SRPC)」兩大核心單位，秉持「學生主體、權益自主」之精神，打破校園不對等的權力結構。我們將透過匿名揭露、數據調查與法規監督，捍衛每位學生的身體自主權、受教權與表達自由，拒絕任何違法、不合理的黑心校規與管教！
                 </p>
 
                 <div class="tags-container" id="tagsBox">
@@ -200,7 +210,7 @@
     </div>
 
     <footer>
-        <p style="font-size: 0.85rem; text-align: center;" id="footerText">© 2026 大成國中學生權利委員會. All Rights Reserved.</p>
+        <p style="font-size: 0.85rem; text-align: center;" id="footerText">© 2026 大成國中學生自治權利保護委員會. All Rights Reserved.</p>
     </footer>
 
     <script>
@@ -209,11 +219,11 @@
         function toggleMode() {
             const body = document.body;
             const orgName = document.getElementById('orgName');
+            const orgEnName = document.getElementById('orgEnName');
             const orgBadge = document.getElementById('orgBadge');
             const coreConcept = document.getElementById('coreConcept');
             const tagsBox = document.getElementById('tagsBox');
             const btnText = document.getElementById('btnText');
-            const webLogo = document.getElementById('webLogo');
             const footerText = document.getElementById('footerText');
 
             isFriendlyMode = !isFriendlyMode;
@@ -223,13 +233,11 @@
                 body.classList.add('mode-friendly');
                 document.title = "大成國中學生公共事務研究小組";
                 orgName.innerText = "大成國中學生公共事務研究小組";
+                orgEnName.innerText = "Student Public Affairs Research Group";
                 orgBadge.innerText = "校園民主與法治教育推動";
                 coreConcept.innerText = "本小組以「促進師生理性溝通」為核心，旨在協助學校推動校園民主法治教育。我們致力於客觀收集學生意見，並依據教育部現行法規，提供學校行政端優化校園管理之參考，共同打造更友善、和諧且符合法治精神的校園環境。";
                 btnText.innerText = "返回學生專區";
                 footerText.innerText = "© 2026 大成國中學生公共事務研究小組. 本站依據教育部友善校園政策建立.";
-                
-                // 保持使用 logo-student.png
-                webLogo.src = "logo-student.png"; 
                 
                 // 更新標籤
                 tagsBox.innerHTML = `
@@ -240,15 +248,13 @@
             } else {
                 // 切換回 B 版（熱血、學生）
                 body.classList.remove('mode-friendly');
-                document.title = "大成國中學生權利委員會";
-                orgName.innerText = "大成國中學生權利委員會";
+                document.title = "大成國中學生自治權利保護委員會";
+                orgName.innerText = "大成國中學生自治權利保護委員會";
+                orgEnName.innerText = "Student Autonomy Rights Protection Committee (SARPC)";
                 orgBadge.innerText = "學生自主平台";
-                coreConcept.innerText = "我們是屬於大成國中學生自己的獨立發聲平台！本會秉持「學生主體、權益自主」之精神，打破校園不對等的權力結構。我們將透過匿名揭露、數據調查與法規監督，捍衛每位學生的身體自主權、受教權與表達自由，拒絕任何違法、不合理的黑心校規與管教！";
+                coreConcept.innerText = "我們是屬於大成國中學生自己的獨立發聲平台！本會下設「學生權利委員會 (SRC)」與「學生權利保護委員會 (SRPC)」兩大核心單位，秉持「學生主體、權益自主」之精神，打破校園不對等的權力結構。我們將透過匿名揭露、數據調查與法規監督，捍衛每位學生的身體自主權、受教權與表達自由，拒絕任何違法、不合理的黑心校規與管教！";
                 btnText.innerText = "師長/行政通道";
-                footerText.innerText = "© 2026 大成國中學生權利委員會. All Rights Reserved.";
-                
-                // 保持使用 logo-student.png
-                webLogo.src = "logo-student.png"; 
+                footerText.innerText = "© 2026 大成國中學生自治權利保護委員會. All Rights Reserved.";
                 
                 // 更新標籤
                 tagsBox.innerHTML = `
