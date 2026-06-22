@@ -78,18 +78,19 @@
             margin-bottom: 40px;
         }
 
-        /* Logo 圖片樣式設定 */
+        /* Logo 圖片樣式設定（已放大） */
         .logo-container {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .logo-img {
-            max-width: 120px; /* 控制 Logo 的最大寬度 */
+            width: 100%;
+            max-width: 200px; /* 從原本的 120px 放大到 200px，你可以隨時修改這個數值來調整大小 */
             height: auto;
-            border-radius: 12px;
+            border-radius: 16px; /* 稍微加大圓角，配合放大的圖片 */
             object-fit: contain;
         }
 
