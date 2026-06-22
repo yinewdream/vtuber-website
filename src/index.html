@@ -59,8 +59,8 @@
             background-image: url('logo-student.png');
             background-repeat: no-repeat;
             background-position: center center;
-            background-size: 40%; /* 控制 Logo 在背景的大小，40% 代表佔螢幕寬度的四成，可自由調整 */
-            opacity: 0.08; /* 預設 B 版暗色模式下的 Logo 透明度（0.08 代表 8% 顯色，淡淡的） */
+            background-size: 80%; /* 控制 Logo 在背景的大小，40% 代表佔螢幕寬度的四成，可自由調整 */
+            opacity: 0.20; /* 預設 B 版暗色模式下的 Logo 透明度（0.08 代表 8% 顯色，淡淡的） */
             z-index: -1; /* 確保在最底層 */
             pointer-events: none; /* 防止干擾網頁點擊 */
             filter: blur(2px); /* 輕微模糊效果，讓文字更好閱讀 */
@@ -69,7 +69,7 @@
 
         /* A 版明亮模式下的背景 Logo 透明度微調 */
         .mode-friendly::before {
-            opacity: 0.05; /* 明亮模式下可以更淡一點，才不會干擾白色卡片 */
+            opacity: 0.15; /* 明亮模式下可以更淡一點，才不會干擾白色卡片 */
         }
 
         /* 右上角切換按鈕 */
