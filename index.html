@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTuber 工作室官方網站</title>
     
-    <!-- 🔱 這裡就是把瀏覽器分頁圖示（Favicon）換成三叉戟 Logo 的關鍵標籤 -->
+    <!-- 🎯 SEO 優化標籤：餵給 Google 爬蟲的搜尋關鍵字與網站簡介 -->
+    <meta name="keywords" content="VTuber工作室, VTuber聚集地, 小揖, Λnewdream, Minecraft伺服器, vtuber.qd.je, 揖個新夢想">
+    <meta name="description" content="歡迎來到小揖 (Λnewdream) 打造的 VTuber 工作室基地！這裡聚集了各大、小 VTuber 藝人夥伴，提供即時的 Discord 公告動態與流暢的 Minecraft 伺服器連線社群。">
+    <meta name="robots" content="index, follow">
+    
+    <!-- 🎯 核心修正：強制手機瀏覽器將不安全的 http 圖片請求升級為 https，防止手機版狂跳防呆圖 -->
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    
+    <!-- 🔱 瀏覽器分頁圖示（Favicon）換成三叉戟 Logo -->
     <link rel="icon" type="image/png" href="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -86,7 +94,6 @@
             border: 1px solid rgba(255, 255, 255, 0.6); text-align: center; margin: 60px 0; z-index: 10;
         }
 
-        /* 🔱 這裡把大 Logo 寬度放大到 200px 囉！ */
         .main-logo-img {
             width: 200px; height: auto; object-fit: contain; margin: 0 auto 20px auto; display: block;
             filter: drop-shadow(0 8px 16px rgba(3, 105, 161, 0.15));
@@ -154,6 +161,60 @@
         .care-form-container.active { display: block; }
 
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.08); margin: 30px 0; }
+
+        /* 🤖 ============ 全新加入：AI 彈出對話視窗樣式模組 ============ */
+        /* 右下角懸浮按鈕 */
+        .ai-floating-btn {
+            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; cursor: pointer; z-index: 999; border: 2px solid rgba(255,255,255,0.4);
+            box-shadow: 0 8px 24px rgba(3, 105, 161, 0.3); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .ai-floating-btn:hover { transform: scale(1.08) rotate(15deg); box-shadow: 0 12px 28px rgba(3, 105, 161, 0.4); }
+        
+        /* 彈出視窗本體 */
+        .ai-chat-window {
+            position: fixed; bottom: 95px; right: 25px; width: 360px; height: 500px;
+            background: rgba(255, 255, 255, 0.95); border-radius: 24px; box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+            border: 1px solid rgba(3, 105, 161, 0.15); backdrop-filter: blur(10px); z-index: 998;
+            display: none; flex-direction: column; overflow: hidden; animation: slideIn 0.25s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .ai-chat-window.active { display: flex; }
+
+        /* 視窗頂部欄 */
+        .ai-window-header {
+            background: #0369a1; color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .ai-header-info { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; }
+        .ai-header-info img { width: 22px; height: 22px; object-fit: contain; }
+        .ai-close-btn { cursor: pointer; opacity: 0.8; transition: opacity 0.2s; font-size: 1.2rem; }
+        .ai-close-btn:hover { opacity: 1; }
+
+        /* 金鑰快捷填寫底欄 */
+        .ai-key-bar {
+            background: #e0f2fe; padding: 6px 15px; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #bae6fd;
+        }
+        .ai-key-bar input { flex-grow: 1; border: none; outline: none; background: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 50px; }
+        .ai-key-btn { background: #0369a1; color: white; border: none; font-size: 0.75rem; font-weight: bold; padding: 4px 10px; border-radius: 50px; cursor: pointer; }
+
+        /* 對話渲染面板 */
+        .ai-messages-body {
+            flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem; line-height: 1.4;
+        }
+        .ai-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; word-wrap: break-word; white-space: pre-wrap; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+        .ai-bubble.user { background: #0369a1; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .ai-bubble.model { background: #f1f5f9; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; }
+
+        /* 視窗底部輸入列 */
+        .ai-window-footer {
+            padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center;
+        }
+        .ai-window-footer input { flex-grow: 1; border: 1px solid #cbd5e1; outline: none; border-radius: 50px; padding: 8px 16px; font-size: 0.9rem; }
+        .ai-window-footer input:focus { border-color: #0369a1; }
+        .ai-send-btn { background: #0369a1; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .ai-send-btn:hover { background: #0c4a6e; }
     </style>
 </head>
 <body>
@@ -294,7 +355,43 @@
         <p style="font-size: 0.9rem; color: #475569;">© 2026 VTuber聚集地 - 網站測試中</p>
     </div>
 
+    <!-- 🤖 ============ 全新加入：AI 彈出對話小窗結構 ============ -->
+    <div class="ai-floating-btn" id="ai-toggle-btn" onclick="toggleAiWindow()">
+        <i class="fas fa-robot"></i>
+    </div>
+
+    <div class="ai-chat-window" id="ai-chat-window">
+        <div class="ai-window-header">
+            <div class="ai-header-info">
+                <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" alt="Logo">
+                <span>基地 AI 助理</span>
+            </div>
+            <div class="ai-close-btn" onclick="toggleAiWindow()"><i class="fas fa-times"></i></div>
+        </div>
+        
+        <div class="ai-key-bar">
+            <input type="password" id="home-ai-key" placeholder="請貼上 Gemini API Key...">
+            <button class="ai-key-btn" onclick="saveHomeAiKey()">儲存</button>
+        </div>
+
+        <div class="ai-messages-body" id="ai-messages-box">
+            <div class="ai-bubble model">哈囉！我是 VTuber 工作室的專屬 AI 助理。有什麼關於基地、成員或是 Minecraft 伺服器的問題都可以問我喔！✨</div>
+        </div>
+
+        <div class="ai-window-footer">
+            <input type="text" id="ai-user-input" placeholder="輸入訊息..." onkeypress="handleAiKeyPress(event)">
+            <button class="ai-send-btn" onclick="sendHomeAiMessage()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
     <script>
+        // 💣 防扒專用：網域鎖定自毀炸彈
+        if (window.location.hostname !== "vtuber.qd.je" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            alert("⚠️ 偵測到非法盜用原始碼！本網頁由小揖(Λnewdream)原創開發，拒絕抄襲！");
+            document.body.innerHTML = "<div style='color:red; text-align:center; margin-top:30vh; font-family:sans-serif;'><h1>❌ 尊重原創，反對無腦抄襲！</h1><p style='color:#64748b; font-size:1.2rem;'>本專案原始碼隸屬於 小揖 (Λnewdream) 所有。</p></div>";
+            window.stop(); 
+        }
+
         const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1iaEgVqq3hUeSAD1cTIjPPONN0jd9SzYO4q40mixAb6E/gviz/tq?tqx=out:csv";
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
         const GOOGLE_CARE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeUpky7LhO2KNyvr64R0nYbbQh-qMw9ouI-1nzKzmE4aG1hzA/viewform?embedded=true";
@@ -320,12 +417,12 @@
                 badge: "官网改版中", hTitle: "VTuber 工作室", hDesc: "欢迎来到Vtuber的基地！小揖正在对官网进行升级。我们将在这里聚集大、小Vtuber，并分享最新的 V 艺人动态与创作链接。",
                 lTitle: "成员名单", lSub: "聚集在此的大、小 VTuber 艺人伙伴", lLoad: "资料同步中...",
                 nTitle: "最新动态公报", nSub: "即时连线两个 Discord 官方公告频道", nb1: "主要讨论群公告", nb2: "粉丝聚集地公告",
-                cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约或版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
+                cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约 or 版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
                 carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。当世界太过沉重时，请记得给自己一个喘息的空间，下面这些专业的倾听者，随时准备用温柔接住你。",
-                hlt1: "卫福部安心专线", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
+                hlt1: "卫福部安心专線", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
                 boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆為公开之台湾官方与公益机构求助管線，所有咨询对话均受隐私与法律保护。",
                 mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
-                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪贴簿！", gotoYT: "前往频道", defaultTitle: "成员"
+                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪貼簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
             jp: {
                 navTitle: "VTuber HUB", home: "ホーム", list: "VTuber 一覧", news: "最新アナウンス", contact: "ビジネス・お問合せ", pj: "プロジェクト (pj)", care: "メンタルケア相談窓口", mc: "マイクラサーバー",
@@ -355,6 +452,108 @@
 
         let currentGlobalLang = 'tw';
 
+        // 📡 首頁彈出型 AI 引擎核心腳本
+        const HOME_GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
+        let homeAiHistory = [];
+
+        window.onload = () => {
+            const savedKey = localStorage.getItem('user_gemini_api_key');
+            if (savedKey) {
+                document.getElementById('home-ai-key').value = savedKey;
+            }
+        };
+
+        function toggleAiWindow() {
+            document.getElementById('ai-chat-window').classList.toggle('active');
+        }
+
+        function saveHomeAiKey() {
+            const keyVal = document.getElementById('home-ai-key').value.trim();
+            if (keyVal) {
+                localStorage.setItem('user_gemini_api_key', keyVal);
+                alert("🔒 API 金鑰已成功儲存同步！");
+            } else {
+                localStorage.removeItem('user_gemini_api_key');
+                alert("ℹ️ 已清除金鑰。");
+            }
+        }
+
+        function handleAiKeyPress(event) {
+            if (event.key === 'Enter') { sendHomeAiMessage(); }
+        }
+
+        async function sendHomeAiMessage() {
+            const currentApiKey = localStorage.getItem('user_gemini_api_key') || document.getElementById('home-ai-key').value.trim();
+            if (!currentApiKey) { alert("⚠️ 請先在視窗頂端填入您的 Gemini API Key 並點擊儲存！"); return; }
+
+            const inputEl = document.getElementById('ai-user-input');
+            const prompt = inputEl.value.trim();
+            if (!prompt) return;
+
+            appendHomeAiBubble('user', prompt);
+            inputEl.value = '';
+
+            homeAiHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const thinkingId = appendHomeAiBubble('model', `<i class="fas fa-spinner fa-spin"></i> 思考中...`);
+
+            try {
+                let headers = { 'Content-Type': 'application/json' };
+                let fetchUrl = HOME_GEMINI_URL;
+
+                if (currentApiKey.startsWith('AQ.')) { headers['X-Goog-Api-Key'] = currentApiKey; }
+                else { fetchUrl = `${HOME_GEMINI_URL}?key=${currentApiKey}`; }
+
+                const response = await fetch(fetchUrl, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        contents: homeAiHistory,
+                        systemInstruction: {
+                            parts: [{ text: `
+                                你是「VTuber工作室官方網站」的專屬大廳智慧助理。
+                                請一律使用「繁體中文（台灣）」提供溫暖、正確且好懂的回答。
+
+                                【你的知識庫設定】：
+                                1. 本站主旨：聚集大、小 VTuber 藝人夥伴的基地，分享最新動態與創作連結。
+                                2. 最高負責人與創辦人：小揖 (Λnewdream)。
+                                3. Minecraft 伺服器：連線 IP 是 vtuber.qd.je，整合了高規格 SRV 路由，守則是保持友善不開掛破壞。
+                            ` }]
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    document.getElementById(thinkingId).innerText = `❌ 出錯：${data.error.message}`;
+                    return;
+                }
+
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const aiText = data.candidates[0].content.parts[0].text;
+                    document.getElementById(thinkingId).innerText = aiText;
+                    homeAiHistory.push({ role: "model", parts: [{ text: aiText }] });
+                }
+            } catch (err) {
+                document.getElementById(thinkingId).innerText = "❌ 網路連線失敗。";
+            } {
+                const box = document.getElementById('ai-messages-box');
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        function appendHomeAiBubble(sender, text) {
+            const box = document.getElementById('ai-messages-box');
+            const bubble = document.createElement('div');
+            const id = "home-ai-" + Date.now();
+            bubble.className = `ai-bubble ${sender}`;
+            bubble.id = id;
+            bubble.innerHTML = text;
+            box.appendChild(bubble);
+            box.scrollTop = box.scrollHeight;
+            return id;
+        }
+
+        // ============ 原網頁所有多國語言及導覽邏輯（完全保留無任何刪除） ============
         function changeGlobalLang(langCode) {
             currentGlobalLang = langCode;
             const dict = mainI18n[langCode];
