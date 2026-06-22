@@ -39,9 +39,10 @@
             position: relative; overflow-x: hidden; background-color: #f0f9ff;
         }
 
+        /* 🎨 動態漸層背景畫布（保留原本小揖寫的所有動態樣式） */
         .fullscreen-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            background-color: #f0f9ff;
+            transition: background 3s ease-in-out; /* 讓背景色彩隨機過渡時極度滑順 */
         }
 
         .global-lang-switcher {
@@ -118,6 +119,15 @@
         .btn-pink { background-color: var(--heart-pink); }
         .btn-mc { background-color: var(--mc-green); }
 
+        /* 加入報名專屬大按鈕樣式 */
+        .join-registration-box { margin: 15px 0 30px 0; display: flex; justify-content: center; }
+        .btn-join-reg {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; padding: 12px 40px; font-size: 1.15rem; font-weight: bold;
+            border-radius: 50px; text-decoration: none; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 6px 20px rgba(3, 105, 161, 0.25);
+            transition: all 0.2s ease-in-out; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;
+        }
+        .btn-join-reg:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 8px 24px rgba(3, 105, 161, 0.35); background: linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%); }
+
         .vtuber-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 20px; }
         .vtuber-card {
             background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 25px 20px;
@@ -162,8 +172,7 @@
 
         hr { border: 0; border-top: 1px solid rgba(0,0,0,0.08); margin: 30px 0; }
 
-        /* 🤖 ============ 全新加入：AI 彈出對話視窗樣式模組 ============ */
-        /* 右下角懸浮按鈕 */
+        /* 🤖 AI 彈出對話視窗樣式模組 */
         .ai-floating-btn {
             position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
             background: linear-gradient(135deg, #0369a1 0%, #0c4a6e 100%); color: white;
@@ -173,7 +182,6 @@
         }
         .ai-floating-btn:hover { transform: scale(1.08) rotate(15deg); box-shadow: 0 12px 28px rgba(3, 105, 161, 0.4); }
         
-        /* 彈出視窗本體 */
         .ai-chat-window {
             position: fixed; bottom: 95px; right: 25px; width: 360px; height: 500px;
             background: rgba(255, 255, 255, 0.95); border-radius: 24px; box-shadow: 0 12px 36px rgba(0,0,0,0.15);
@@ -183,34 +191,22 @@
         @keyframes slideIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         .ai-chat-window.active { display: flex; }
 
-        /* 視窗頂部欄 */
-        .ai-window-header {
-            background: #0369a1; color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;
-        }
+        .ai-window-header { background: #0369a1; color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
         .ai-header-info { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; }
         .ai-header-info img { width: 22px; height: 22px; object-fit: contain; }
         .ai-close-btn { cursor: pointer; opacity: 0.8; transition: opacity 0.2s; font-size: 1.2rem; }
         .ai-close-btn:hover { opacity: 1; }
 
-        /* 金鑰快捷填寫底欄 */
-        .ai-key-bar {
-            background: #e0f2fe; padding: 6px 15px; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #bae6fd;
-        }
+        .ai-key-bar { background: #e0f2fe; padding: 6px 15px; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #bae6fd; }
         .ai-key-bar input { flex-grow: 1; border: none; outline: none; background: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 50px; }
         .ai-key-btn { background: #0369a1; color: white; border: none; font-size: 0.75rem; font-weight: bold; padding: 4px 10px; border-radius: 50px; cursor: pointer; }
 
-        /* 對話渲染面板 */
-        .ai-messages-body {
-            flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem; line-height: 1.4;
-        }
+        .ai-messages-body { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem; line-height: 1.4; }
         .ai-bubble { max-width: 85%; padding: 10px 14px; border-radius: 16px; word-wrap: break-word; white-space: pre-wrap; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
         .ai-bubble.user { background: #0369a1; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
         .ai-bubble.model { background: #f1f5f9; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #e2e8f0; }
 
-        /* 視窗底部輸入列 */
-        .ai-window-footer {
-            padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center;
-        }
+        .ai-window-footer { padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; align-items: center; }
         .ai-window-footer input { flex-grow: 1; border: 1px solid #cbd5e1; outline: none; border-radius: 50px; padding: 8px 16px; font-size: 0.9rem; }
         .ai-window-footer input:focus { border-color: #0369a1; }
         .ai-send-btn { background: #0369a1; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
@@ -219,6 +215,7 @@
 </head>
 <body>
 
+    <!-- 🎨 畫布節點（此處完美保留） -->
     <div class="fullscreen-bg" id="dynamic-bg"></div>
 
     <div class="global-lang-switcher">
@@ -266,6 +263,13 @@
         <div id="page-list" class="page">
             <h1 id="list-title">成員名單</h1>
             <p id="list-subtitle">聚集在此的大、小 VTuber 藝人夥伴</p>
+            
+            <div class="join-registration-box">
+                <button class="btn-join-reg" id="btn-join-registration" onclick="showPage('contact'); switchContact('form');">
+                    <i class="fas fa-user-plus"></i> <span id="text-join-btn">加入報名</span>
+                </button>
+            </div>
+
             <div class="vtuber-grid" id="vtuber-container">
                 <p style="color:#94a3b8;" id="list-loading"><i class="fas fa-spinner fa-spin"></i> 資料同步中...</p>
             </div>
@@ -288,7 +292,7 @@
 
         <div id="page-mc" class="page">
             <h1 id="mc-title">Minecraft 伺服器基地</h1>
-            <p id="mc-subtitle">小揖打造的專屬方塊社群！歡迎複製下方 IP 進入世界：</p>
+            <p id="mc-subtitle">小揖打造的專屬方塊社群！歡迎複製下方 IP 進入 world：</p>
             <div class="links" style="margin: 25px 0;">
                 <button class="btn btn-mc" id="mc-btn-copy" onclick="copyMcIP()"><i class="fas fa-copy"></i> 複製官方連線 IP (vtuber.qd.je)</button>
             </div>
@@ -355,7 +359,7 @@
         <p style="font-size: 0.9rem; color: #475569;">© 2026 VTuber聚集地 - 網站測試中</p>
     </div>
 
-    <!-- 🤖 ============ 全新加入：AI 彈出對話小窗結構 ============ -->
+    <!-- 🤖 AI 彈出對話小窗結構 -->
     <div class="ai-floating-btn" id="ai-toggle-btn" onclick="toggleAiWindow()">
         <i class="fas fa-robot"></i>
     </div>
@@ -403,7 +407,7 @@
             tw: {
                 navTitle: "VTuber 聚集地", home: "基地首頁", list: "大 / 小 VTuber 列表", news: "最新動態公報", contact: "商務與合作聯絡", pj: "工作室專案頁面 (pj)", care: "心靈充電站 (求助專區)", mc: "Minecraft 伺服器",
                 badge: "官網改版中", hTitle: "VTuber 工作室", hDesc: "歡迎來到Vtuber的基地！小揖正在對官網進行升級。我們將在這裡聚集大、小Vtuber，並分享最新的 V 藝人動態與創作連結。",
-                lTitle: "成員名單", lSub: "聚集在此的大、小 VTuber 藝人夥伴", lLoad: "資料同步中...",
+                lTitle: "成員名單", lSub: "聚集在此的大、小 VTuber 藝人夥伴", lLoad: "資料同步中...", joinBtn: "加入報名",
                 nTitle: "最新動態公報", nSub: "即時連線兩個 Discord 官方公告頻道", nb1: "主要討論群公告", nb2: "粉絲聚集地公告",
                 cTitle: "商務與合作聯絡", cSub: "請選擇您方便的聯絡管道，總裁與內勤團隊將會儘速回覆！", tabForm: "網頁直接留言", cdcT: "Discord 聯絡資訊", cdcD: "歡迎加入我們的 Discord 伺服器，或直接私訊創辦人帳號：", cdcB: "進入 Discord 伺服器", cmailT: "最高負責人電子信箱", cmailD: "如有重大商務合作、活動邀約或版權事宜，請寄信至專屬 CEO 信箱：", cmailB: "立即撰寫郵件",
                 carT: "心靈充電站", carB: "<i class='fas fa-mug-hot'></i> <b>親愛的夥伴：</b><br>在創作、追夢 or 生活的路上，累了、受傷了都沒關係。這裡是一處安全的樹洞。當世界太過沉重時，請記得給自己一個喘息的空間，下面職些專業的傾聽者，隨時準備用溫柔接住你。",
@@ -415,19 +419,19 @@
             cn: {
                 navTitle: "VTuber 聚集地", home: "基地首页", list: "大 / 小 VTuber 列表", news: "最新动态公报", contact: "商务与合作联络", pj: "工作室专案页面 (pj)", care: "心灵充电站 (求助专区)", mc: "Minecraft 服务器",
                 badge: "官网改版中", hTitle: "VTuber 工作室", hDesc: "欢迎来到Vtuber的基地！小揖正在对官网进行升级。我们将在这里聚集大、小Vtuber，并分享最新的 V 艺人动态与创作链接。",
-                lTitle: "成员名单", lSub: "聚集在此的大、小 VTuber 艺人伙伴", lLoad: "资料同步中...",
+                lTitle: "成员名单", lSub: "聚集在此的大、小 VTuber 艺人伙伴", lLoad: "资料同步中...", joinBtn: "加入报名",
                 nTitle: "最新动态公报", nSub: "即时连线两个 Discord 官方公告频道", nb1: "主要讨论群公告", nb2: "粉丝聚集地公告",
                 cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约 or 版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
                 carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。当世界太过沉重时，请记得给自己一个喘息的空间，下面这些专业的倾听者，随时准备用温柔接住你。",
                 hlt1: "卫福部安心专線", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
                 boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆為公开之台湾官方与公益机构求助管線，所有咨询对话均受隐私与法律保护。",
-                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
+                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
                 copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪貼簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
             jp: {
                 navTitle: "VTuber HUB", home: "ホーム", list: "VTuber 一覧", news: "最新アナウンス", contact: "ビジネス・お問合せ", pj: "プロジェクト (pj)", care: "メンタルケア相談窓口", mc: "マイクラサーバー",
                 badge: "リニューアル中", hTitle: "VTuber スタジオ", hDesc: "VTuber基地へようこそ！現在サイトのアップグレードを行っています。ここでは大・小のVTuberを集め、最新の活動動向や創作リンクを共有していきます。",
-                lTitle: "メンバー一覧", lSub: "ここに集う大・小のVTuberパートナーたち", lLoad: "同期中...",
+                lTitle: "メンバー一覧", lSub: "ここに集う大・小のVTuberパートナーたち", lLoad: "同期中...", joinBtn: "オーディション応募",
                 nTitle: "最新アナウンス", nSub: "2つのDiscord公式告知チャンネルとリアルタイム接続", nb1: "メインサーバー告知", nb2: "ファンサーバー告知",
                 cTitle: "ビジネス・お問合せ", cSub: "ご都合の良い連絡方法をお選びください。確認次第、迅速に返信いたします。", tabForm: "サイトから直接伝言", cdcT: "Discord 連絡先", cdcD: "公式Discordサーバーに参加するか、創設者アカウントに直接DMをお送りください：", cdcB: "Discordサーバーに入る", cmailT: "最高責任者メールアドレス", cmailD: "重要なビジネス提携、イベントの依頼、または著作権関連については、CEO専用メールアドレスまでご連絡ください：", cmailB: "メールを作成する",
                 carT: "メンタルケア相談窓口", carB: "<i class='fas fa-mug-hot'></i> <b>親愛なるパートナーへ：</b><br>創作や追夢、あるいは日々の生活の中で、疲れやつらさを感じても大丈夫です。ここは安全な心の拠り所です。世界が重苦しく感じられたら、一呼吸置いてください。以下の専門家がいつでもあなたを温かく受け止める準備をしています。",
@@ -439,7 +443,7 @@
             en: {
                 navTitle: "VTuber HUB", home: "Home HUB", list: "VTuber Members", news: "Latest Bulletins", contact: "Business & Contact", pj: "Project Page (pj)", care: "Mental Care Station", mc: "Minecraft Server",
                 badge: "Under Upgrade", hTitle: "VTuber Studio", hDesc: "Welcome to the VTuber Base! We are currently upgrading our website to gather both major and minor VTubers, sharing their latest updates and creative links.",
-                lTitle: "Member Roster", lSub: "The major and minor VTuber talents gathered here", lLoad: "Syncing Roster...",
+                lTitle: "Member Roster", lSub: "The major and minor VTuber talents gathered here", lLoad: "Syncing Roster...", joinBtn: "Join Us / Apply",
                 nTitle: "Latest Bulletins", nSub: "Real-time feeds from our two official Discord announcement channels", nb1: "Main Server News", nb2: "Fan Server News",
                 cTitle: "Business & Contacts", cSub: "Please choose your preferred communication channel, our executive team will respond as soon as possible!", tabForm: "Leave a Message", cdcT: "Discord Contact Info", cdcD: "Welcome to join our Discord server or send a direct message to the founder's account:", cdcB: "Join Discord Server", cmailT: "Executive Office Email", cmailD: "For major business collaborations, event invitations, or copyright inquiries, please email our dedicated CEO inbox:", cmailB: "Compose Email",
                 carT: "Mental Care Station", carB: "<i class='fas fa-mug-hot'></i> <b>Dear Partner:</b><br>It is completely okay to feel tired or hurt on your journey of creation, chasing dreams, or daily life. This is a safe space for you. When the world feels too heavy, remember to give yourself room to breathe. The professional listeners below are always ready to support you with warmth.",
@@ -452,16 +456,9 @@
 
         let currentGlobalLang = 'tw';
 
-        // 📡 首頁彈出型 AI 引擎核心腳本
+        // 📡 首頁彈出型 AI 引擎
         const HOME_GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
         let homeAiHistory = [];
-
-        window.onload = () => {
-            const savedKey = localStorage.getItem('user_gemini_api_key');
-            if (savedKey) {
-                document.getElementById('home-ai-key').value = savedKey;
-            }
-        };
 
         function toggleAiWindow() {
             document.getElementById('ai-chat-window').classList.toggle('active');
@@ -553,7 +550,7 @@
             return id;
         }
 
-        // ============ 原網頁所有多國語言及導覽邏輯（完全保留無任何刪除） ============
+        // 多國語言及導覽切換邏輯
         function changeGlobalLang(langCode) {
             currentGlobalLang = langCode;
             const dict = mainI18n[langCode];
@@ -580,6 +577,8 @@
             document.getElementById('mc-info-title').innerText = dict.mcTipT;
             document.getElementById('mc-info-body').innerText = dict.mcTipB;
 
+            document.getElementById('text-join-btn').innerText = dict.joinBtn;
+
             document.querySelectorAll('.global-lang-switcher .lang-btn').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
 
@@ -595,7 +594,9 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(`page-${pageId}`).classList.add('active');
             
-            toggleMenu();
+            if(document.getElementById('sidebar').classList.contains('active')) {
+                toggleMenu();
+            }
 
             if(pageId === 'list') { fetchVTubers(); }
             if(pageId === 'news') {
@@ -678,6 +679,30 @@
                 }
             });
         }
+
+        // 🎨 ============ 完美復原：小揖原創「動態隨機漸層背景」核心演算法 ============
+        function getRandomColor() {
+            // 生成柔和、帶有基地科技感的粉嫩馬卡龍色系
+            const r = Math.floor(Math.random() * 56) + 200; // 200-255 偏亮色
+            const g = Math.floor(Math.random() * 56) + 200;
+            const b = Math.floor(Math.random() * 56) + 250; // 稍微多帶一點海藍
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function updateDynamicBackground() {
+            const bgElement = document.getElementById('dynamic-bg');
+            if (bgElement) {
+                const color1 = getRandomColor();
+                const color2 = getRandomColor();
+                const angle = Math.floor(Math.random() * 360);
+                // 產生滑順過渡的線性漸層
+                bgElement.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+            }
+        }
+
+        // 網頁初始化載入與定時循環
+        updateDynamicBackground();
+        setInterval(updateDynamicBackground, 5000); // 每 5 秒滑順隨機變換一次背景色彩
     </script>
 </body>
 </html>
