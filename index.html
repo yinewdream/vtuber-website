@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VTuber 工作室官方網站</title>
     
-    <!-- 🎯 SEO 優化標籤：餵給 Google 爬蟲的搜尋關鍵字與網站簡介 -->
     <meta name="keywords" content="VTuber工作室, VTuber聚集地, 小揖, Λnewdream, Minecraft伺服器, vtuber.qd.je, 揖個新夢想">
     <meta name="description" content="歡迎來到小揖 (Λnewdream) 打造的 VTuber 工作室基地！這裡聚集了各大、小 VTuber 藝人夥伴，提供即時的 Discord 公告動態與流暢的 Minecraft 伺服器連線社群。">
     <meta name="robots" content="index, follow">
     
-    <!-- 🎯 核心修正：強制手機瀏覽器將不安全的 http 圖片請求升級為 https，防止手機版狂跳防呆圖 -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     
-    <!-- 🔱 瀏覽器分頁圖示（Favicon）換成三叉戟 Logo -->
     <link rel="icon" type="image/png" href="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -39,10 +36,10 @@
             position: relative; overflow-x: hidden; background-color: #f0f9ff;
         }
 
-        /* 🎨 動態漸層背景畫布（保留原本小揖寫的所有動態樣式） */
+        /* 🎨 動態漸層背景畫布（滑順色彩隨機變換過渡） */
         .fullscreen-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
-            transition: background 3s ease-in-out; /* 讓背景色彩隨機過渡時極度滑順 */
+            transition: background 3s ease-in-out; 
         }
 
         .global-lang-switcher {
@@ -119,7 +116,7 @@
         .btn-pink { background-color: var(--heart-pink); }
         .btn-mc { background-color: var(--mc-green); }
 
-        /* 加入報名專屬大按鈕樣式 */
+        /* 加入報名按鈕樣式 */
         .join-registration-box { margin: 15px 0 30px 0; display: flex; justify-content: center; }
         .btn-join-reg {
             background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; padding: 12px 40px; font-size: 1.15rem; font-weight: bold;
@@ -215,7 +212,6 @@
 </head>
 <body>
 
-    <!-- 🎨 畫布節點（此處完美保留） -->
     <div class="fullscreen-bg" id="dynamic-bg"></div>
 
     <div class="global-lang-switcher">
@@ -250,7 +246,6 @@
     <div class="container">
         <div id="page-home" class="page active">
             <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" class="main-logo-img" alt="Studio Logo">
-            
             <div class="status-badge" id="home-badge"><i class="fas fa-tools"></i> 官網改版中</div>
             <h1 id="home-title">VTuber 工作室</h1>
             <p id="home-desc">歡迎來到Vtuber的基地！小揖正在對官網進行升級。我們將在這裡聚集大、小Vtuber，並分享最新的 V 藝人動態與創作連結。</p>
@@ -263,13 +258,11 @@
         <div id="page-list" class="page">
             <h1 id="list-title">成員名單</h1>
             <p id="list-subtitle">聚集在此的大、小 VTuber 藝人夥伴</p>
-            
             <div class="join-registration-box">
                 <button class="btn-join-reg" id="btn-join-registration" onclick="showPage('contact'); switchContact('form');">
                     <i class="fas fa-user-plus"></i> <span id="text-join-btn">加入報名</span>
                 </button>
             </div>
-
             <div class="vtuber-grid" id="vtuber-container">
                 <p style="color:#94a3b8;" id="list-loading"><i class="fas fa-spinner fa-spin"></i> 資料同步中...</p>
             </div>
@@ -292,7 +285,7 @@
 
         <div id="page-mc" class="page">
             <h1 id="mc-title">Minecraft 伺服器基地</h1>
-            <p id="mc-subtitle">小揖打造的專屬方塊社群！歡迎複製下方 IP 進入 world：</p>
+            <p id="mc-subtitle">小揖打造的專屬方塊社群！歡迎複製下方 IP 進入世界：</p>
             <div class="links" style="margin: 25px 0;">
                 <button class="btn btn-mc" id="mc-btn-copy" onclick="copyMcIP()"><i class="fas fa-copy"></i> 複製官方連線 IP (vtuber.qd.je)</button>
             </div>
@@ -359,7 +352,6 @@
         <p style="font-size: 0.9rem; color: #475569;">© 2026 VTuber聚集地 - 網站測試中</p>
     </div>
 
-    <!-- 🤖 AI 彈出對話小窗結構 -->
     <div class="ai-floating-btn" id="ai-toggle-btn" onclick="toggleAiWindow()">
         <i class="fas fa-robot"></i>
     </div>
@@ -372,16 +364,13 @@
             </div>
             <div class="ai-close-btn" onclick="toggleAiWindow()"><i class="fas fa-times"></i></div>
         </div>
-        
         <div class="ai-key-bar">
             <input type="password" id="home-ai-key" placeholder="請貼上 Gemini API Key...">
             <button class="ai-key-btn" onclick="saveHomeAiKey()">儲存</button>
         </div>
-
         <div class="ai-messages-body" id="ai-messages-box">
             <div class="ai-bubble model">哈囉！我是 VTuber 工作室的專屬 AI 助理。有什麼關於基地、成員或是 Minecraft 伺服器的問題都可以問我喔！✨</div>
         </div>
-
         <div class="ai-window-footer">
             <input type="text" id="ai-user-input" placeholder="輸入訊息..." onkeypress="handleAiKeyPress(event)">
             <button class="ai-send-btn" onclick="sendHomeAiMessage()"><i class="fas fa-paper-plane"></i></button>
@@ -421,11 +410,11 @@
                 badge: "官网改版中", hTitle: "VTuber 工作室", hDesc: "欢迎来到Vtuber的基地！小揖正在对官网进行升级。我们将在这里聚集大、小Vtuber，并分享最新的 V 艺人动态与创作链接。",
                 lTitle: "成员名单", lSub: "聚集在此的大、小 VTuber 艺人伙伴", lLoad: "资料同步中...", joinBtn: "加入报名",
                 nTitle: "最新动态公报", nSub: "即时连线两个 Discord 官方公告频道", nb1: "主要讨论群公告", nb2: "粉丝聚集地公告",
-                cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会儘速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约 or 版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
+                cTitle: "商务与合作联络", cSub: "请选择您方便的联络管道，总裁与内勤团队将会麾速回复！", tabForm: "网页直接留言", cdcT: "Discord 联络资讯", cdcD: "欢迎加入我们的 Discord 服务器，或直接私讯创办人账号：", cdcB: "进入 Discord 服务器", cmailT: "最高负责人电子信箱", cmailD: "如有重大商务合作、活动邀约 or 版权事宜，请寄信至专属 CEO 信箱：", cmailB: "立即撰写邮件",
                 carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。当世界太过沉重时，请记得给自己一个喘息的空间，下面这些专业的倾听者，随时准备用温柔接住你。",
                 hlt1: "卫福部安心专線", hln1: "台湾官方24小时免费咨询专线。不论遇到什么低潮，随时都可以拨打。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预，在最黑暗的时刻，电话那一头总有人愿意倾听。",
                 boxT: "写封信给基地总裁", boxD: "如果你不习惯联络外面的机构，只想把心事留在这里，可以点击下方按钮。这是一个完全独立的匿名留言树洞，你可以放心写下 any 痛苦或创伤，我们会用最温暖的心读完它。", boxB: "开启匿名倾诉树洞", carF: "本专区资讯皆為公开之台湾官方与公益机构求助管線，所有咨询对话均受隐私与法律保护。",
-                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连线 IP (vtuber.qd.je)", mcTipT: "服务器玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
+                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连線 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
                 copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪貼簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
             jp: {
@@ -436,7 +425,7 @@
                 cTitle: "ビジネス・お問合せ", cSub: "ご都合の良い連絡方法をお選びください。確認次第、迅速に返信いたします。", tabForm: "サイトから直接伝言", cdcT: "Discord 連絡先", cdcD: "公式Discordサーバーに参加するか、創設者アカウントに直接DMをお送りください：", cdcB: "Discordサーバーに入る", cmailT: "最高責任者メールアドレス", cmailD: "重要なビジネス提携、イベントの依頼、または著作権関連については、CEO専用メールアドレスまでご連絡ください：", cmailB: "メールを作成する",
                 carT: "メンタルケア相談窓口", carB: "<i class='fas fa-mug-hot'></i> <b>親愛なるパートナーへ：</b><br>創作や追夢、あるいは日々の生活の中で、疲れやつらさを感じても大丈夫です。ここは安全な心の拠り所です。世界が重苦しく感じられたら、一呼吸置いてください。以下の専門家がいつでもあなたを温かく受け止める準備をしています。",
                 hlt1: "安心相談ホットライン", hln1: "台湾政府による24時間年中無休の無料心理カウンセリング。どのような悩みでも、いつでもお電話いただけます。", hlt2: "生命の電話", hln2: "24時間対応の危機介入サービス。最も暗い瞬間にも、電話の向こうであなたの声に耳を傾ける人が必ずいます。",
-                boxT: "代表へ手紙を書く", boxD: "外部の機関に連絡するのに抵抗があり、ここだけに気持ちを残したい場合は、下のボタンをクリックしてください。完全匿名のメッセージボックスです。どんな苦しみや傷でも安心してお書きください。温かい心で拝読いたします。", boxB: "匿名メッセージを開く", carF: "※このエリアの情報は台湾の公的機関および公益団体の相談窓口です。すべてのカウンセリングはプライバシーと法律によって保護されています。",
+                boxT: "代表へ手紙を書く", boxD: "外部の機関に連絡するのに抵抗があり、ここだけに気持ちを残したい場合は、下のボタンをクリックしてください。完全匿名のメッセージボックスです。どんな苦しみや傷便安心してお書きください。温かい心で拝読いたします。", boxB: "匿名メッセージを開く", carF: "※このエリアの情報は台湾の公的機関および公益団体の相談窓口です。すべてのカウンセリングはプライバシーと法律によって保護されています。",
                 mcT: "Minecraft サーバー基地", mcSub: "XiaoYiが贈る特別なブロックコミュニティ！IPをコピーして世界へ参加しましょう：", mcBtn: "公式接続IPをコピー (vtuber.qd.je)", mcTipT: "サーバー利用規約：", mcTipB: "当サーバーは最高水準のSRVドメイン連携により快適な接続を保証しています。マナーを守り、他人の建築を尊重し、チートや荒らし行為は絶対にお控えください。みんなで最高のマイクラ世界を作りましょう！",
                 copied: "✅ Minecraft サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！", gotoYT: "チャンネルへ", defaultTitle: "メンバー"
             },
@@ -550,7 +539,7 @@
             return id;
         }
 
-        // 多國語言及導覽切換邏輯
+        // 多國語言及導覽切換
         function changeGlobalLang(langCode) {
             currentGlobalLang = langCode;
             const dict = mainI18n[langCode];
@@ -664,9 +653,14 @@
                 const cols = parseCSVLine(row);
                 if (cols.length >= 5 && cols[1] !== "") {
                     let [title, name, image, youtube, description] = cols;
-                    image = image.replace(/^"|"$/g, ''); 
-                    youtube = youtube.replace(/^"|"$/g, '');
-                    const finalTitle = title || dict.defaultTitle;
+                    
+                    // 🎯 核心修復：徹底修剪引號、頭尾空白，避免欄位混亂導致圖片無法載入
+                    image = image.replace(/^["']|["']$/g, '').trim(); 
+                    youtube = youtube.replace(/^["']|["']$/g, '').trim();
+                    name = name.replace(/^["']|["']$/g, '').trim();
+                    description = description.replace(/^["']|["']$/g, '').trim();
+                    
+                    const finalTitle = title.replace(/^["']|["']$/g, '').trim() || dict.defaultTitle;
 
                     container.innerHTML += `
                         <div class="vtuber-card">
@@ -680,12 +674,11 @@
             });
         }
 
-        // 🎨 ============ 完美復原：小揖原創「動態隨機漸層背景」核心演算法 ============
+        // 🎨 動態隨機漸層背景演算法
         function getRandomColor() {
-            // 生成柔和、帶有基地科技感的粉嫩馬卡龍色系
-            const r = Math.floor(Math.random() * 56) + 200; // 200-255 偏亮色
+            const r = Math.floor(Math.random() * 56) + 200; 
             const g = Math.floor(Math.random() * 56) + 200;
-            const b = Math.floor(Math.random() * 56) + 250; // 稍微多帶一點海藍
+            const b = Math.floor(Math.random() * 56) + 250; 
             return `rgb(${r}, ${g}, ${b})`;
         }
 
@@ -695,14 +688,12 @@
                 const color1 = getRandomColor();
                 const color2 = getRandomColor();
                 const angle = Math.floor(Math.random() * 360);
-                // 產生滑順過渡的線性漸層
                 bgElement.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
             }
         }
 
-        // 網頁初始化載入與定時循環
         updateDynamicBackground();
-        setInterval(updateDynamicBackground, 5000); // 每 5 秒滑順隨機變換一次背景色彩
+        setInterval(updateDynamicBackground, 5000); 
     </script>
 </body>
 </html>
