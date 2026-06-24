@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極致 3D 開放世界 - 完美修復版</title>
+    <title>極致 3D 開放世界 - Skin 完美解析版</title>
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         #blocker {
@@ -48,7 +48,7 @@
 
     <div id="blocker">
         <div>
-            <h1 style="color: #00ffcc; margin-bottom: 10px;">極致開放世界 2.1</h1>
+            <h1 style="color: #00ffcc; margin-bottom: 10px;">極致開放世界 2.2</h1>
             <p>點擊畫面 進入世界</p>
             <div style="font-size: 14px; color: #aaa; text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 5px;">
                 • 移動：WASD / 方向鍵<br>
@@ -96,37 +96,35 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.0;
+        renderer.toneMappingExposure = 1.2; // 稍微調亮整體曝光
         document.body.appendChild(renderer.domElement);
 
-        // --- 2. 光影系統 ---
-        const ambientLight = new THREE.AmbientLight(0x333355, 0.6);
+        // --- 2. 光影系統（大幅度加強亮度，避免角色過黑） ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.9); // 調高環境光到 0.9，全身無死角變亮
         scene.add(ambientLight);
 
-        const sunLight = new THREE.DirectionalLight(0xffaa66, 1.2);
-        sunLight.position.set(100, 150, 50);
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        sunLight.position.set(50, 200, 50);
         sunLight.castShadow = true;
-        sunLight.shadow.mapSize.width = 2048;
-        sunLight.shadow.mapSize.height = 2048;
         scene.add(sunLight);
 
         // --- 3. 地面 ---
         const floorGeo = new THREE.PlaneGeometry(3000, 3000);
-        const floorMat = new THREE.MeshStandardMaterial({ color: 0x121214, roughness: 0.2, metalness: 0.8 });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x121214, roughness: 0.4, metalness: 0.2 });
         const floor = new THREE.Mesh(floorGeo, floorMat);
         floor.rotation.x = -Math.PI / 2;
         floor.receiveShadow = true;
         scene.add(floor);
 
-        // --- 4. 隨機 PBR 障礙建築物 ---
+        // --- 4. 隨機 PBR 建築物 ---
         const objects = [];
         const boxGeo = new THREE.BoxGeometry(1, 1, 1);
         for (let i = 0; i < 400; i++) {
             const colors = [0x00ffcc, 0xff007f, 0x7000ff, 0x333333, 0x222244];
             const boxMat = new THREE.MeshStandardMaterial({ 
                 color: colors[Math.floor(Math.random() * colors.length)],
-                roughness: Math.random() * 0.4,
-                metalness: Math.random() * 0.9
+                roughness: 0.4,
+                metalness: 0.5
             });
             const mesh = new THREE.Mesh(boxGeo, boxMat);
             const w = Math.random() * 15 + 4;
@@ -136,7 +134,6 @@
             
             let x = Math.random() * 1000 - 500;
             let z = Math.random() * 1000 - 500;
-            // 避開出生點中心
             if (Math.abs(x) < 30 && Math.abs(z) < 30) { x += 50; z += 50; }
             mesh.position.set(x, h / 2, z);
             mesh.castShadow = true;
@@ -145,12 +142,14 @@
             objects.push(mesh);
         }
 
-        // --- 5. 玩家模型 ---
+        // --- 5. 玩家模型（Minecraft Skin 正統解析器） ---
         const playerGroup = new THREE.Group();
         scene.add(playerGroup);
 
-        const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffcc, roughness: 0.6 });
+        // 預設外觀
+        const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffcc, roughness: 0.5 });
         
+        // 建立方塊人骨架
         const headMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), defaultMaterial); headMesh.position.y = 1.375;
         const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.75, 0.25), defaultMaterial); bodyMesh.position.y = 0.75;
         const leftArm = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.75, 0.25), defaultMaterial); leftArm.position.set(-0.375, 0.75, 0);
@@ -159,11 +158,39 @@
         const rightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.75, 0.25), defaultMaterial); rightLeg.position.set(0.125, 0.375, 0);
 
         playerGroup.add(headMesh, bodyMesh, leftArm, rightArm, leftLeg, rightLeg);
-        
-        // 關鍵修正：初始直接穩穩站在地面(Y=0)
         playerGroup.position.set(0, 0, 0); 
 
-        // Skin 圖片讀取
+        // 核心功能：切割 2D 圖片並轉為 3D 方塊的 6 個面材質 (Minecraft 標準 64x64 格式)
+        function getCubeMaterials(texture, u, v, w, h, d) {
+            const mats = [];
+            // 六個面的貼圖順序：右(加X)、左(減X)、上(加Y)、下(減Y)、前(加Z)、後(減Z)
+            const faces = [
+                { x: u + d + w, y: v + d,     w: d, h: h }, // 右
+                { x: u,         y: v + d,     w: d, h: h }, // 左
+                { x: u + d,     y: v,         w: w, h: d }, // 上
+                { x: u + d + w, y: v,         w: w, h: d }, // 下
+                { x: u + d,     y: v + d,     w: w, h: h }, // 前
+                { x: u + d + w + d, y: v + d, w: w, h: h }  // 後
+            ];
+
+            faces.forEach(f => {
+                const texClone = texture.clone();
+                texClone.needsUpdate = true;
+                
+                // 計算 UV 映射區塊
+                texClone.repeat.set(f.w / 64, f.h / 64);
+                texClone.offset.set(f.x / 64, 1 - (f.y + f.h) / 64);
+
+                mats.push(new THREE.MeshStandardMaterial({ 
+                    map: texClone, 
+                    roughness: 0.6,
+                    metalness: 0.1
+                }));
+            });
+            return mats;
+        }
+
+        // 監聽 Skin 上傳
         document.getElementById('skinInput').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -172,14 +199,23 @@
                     const img = new Image();
                     img.onload = function() {
                         const texture = new THREE.Texture(img);
-                        texture.needsUpdate = true;
                         texture.magFilter = THREE.NearestFilter;
                         texture.minFilter = THREE.NearestFilter;
+                        texture.needsUpdate = true;
+
+                        // 依據標準 Minecraft Skin 像素網格進行精準切片 (U, V, 寬, 高, 深)
+                        headMesh.material = getCubeMaterials(texture, 0, 0, 8, 8, 8);     // 頭
+                        bodyMesh.material = getCubeMaterials(texture, 16, 16, 8, 12, 4);   // 身體
+                        rightArm.material = getCubeMaterials(texture, 40, 16, 4, 12, 4);   // 右手
+                        leftArm.material = getCubeMaterials(texture, 32, 48, 4, 12, 4);    // 左手 (相容新版/雙層)
+                        rightLeg.material = getCubeMaterials(texture, 0, 16, 4, 12, 4);    // 右腳
+                        leftLeg.material = getCubeMaterials(texture, 16, 48, 4, 12, 4);    // 左腳
                         
-                        const skinMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6 });
-                        headMesh.material = skinMat; bodyMesh.material = skinMat;
-                        leftArm.material = skinMat; rightArm.material = skinMat;
-                        leftLeg.material = skinMat; rightLeg.material = skinMat;
+                        // 萬一 Skin 是舊版 64x32 規格，將左肢複製右肢貼圖
+                        if (img.height === 32) {
+                            leftArm.material = rightArm.material;
+                            leftLeg.material = rightLeg.material;
+                        }
                     };
                     img.src = event.target.result;
                 };
@@ -206,7 +242,6 @@
             }
         }
 
-        // 核心修正：點擊按鈕時先讓控制權解鎖，點擊才不會失效
         document.getElementById('toggleViewBtn').addEventListener('mousedown', (e) => {
             controls.unlock();
             switchView();
@@ -226,7 +261,7 @@
         let canJump = true;
         let velocity = new THREE.Vector3();
         
-        const PLAYER_HEIGHT = 1.6; // 眼睛高度
+        const PLAYER_HEIGHT = 1.6;
 
         const raycasterDown = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, 0.2);
         const raycasterSides = [
@@ -243,7 +278,7 @@
             if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.d = true;
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.shift = true;
             if (e.code === 'KeyV') switchView();
-            if (e.code === 'KeyR') { playerGroup.position.set(0, 0, 0); velocity.set(0,0,0); } // R鍵救援重置
+            if (e.code === 'KeyR') { playerGroup.position.set(0, 0, 0); velocity.set(0,0,0); }
             if (e.code === 'Space' && canJump) { velocity.y = 30; canJump = false; }
         });
 
@@ -272,7 +307,7 @@
 
                 velocity.x -= velocity.x * 10.0 * delta;
                 velocity.z -= velocity.z * 10.0 * delta;
-                velocity.y -= 9.8 * 10.0 * delta; // 稍微調降重力讓跳躍更流暢
+                velocity.y -= 9.8 * 10.0 * delta;
 
                 const direction = new THREE.Vector3();
                 direction.z = Number(keys.w) - Number(keys.s);
@@ -281,14 +316,12 @@
 
                 const currentSpeed = keys.shift ? 500.0 : 300.0;
                 speedStatus.innerText = keys.shift ? "衝刺中 ⚡" : "正常";
-                speedStatus.style.color = keys.shift ? "#ff007f" : "#00ffcc";
 
                 if (keys.w || keys.s) velocity.z -= direction.z * currentSpeed * delta;
                 if (keys.a || keys.d) velocity.x -= direction.x * currentSpeed * delta;
 
                 const playerPos = playerGroup.position;
 
-                // 牆壁碰撞
                 let collideForward = false, collideBackward = false, collideLeft = false, collideRight = false;
                 const checkPos = playerPos.clone().add(new THREE.Vector3(0, 0.5, 0));
                 
@@ -306,7 +339,6 @@
                 controls.moveForward(-velocity.z * delta);
                 playerPos.y += (velocity.y * delta);
 
-                // 垂直落腳點判定
                 raycasterDown.ray.origin.copy(playerPos).add(new THREE.Vector3(0, 0.1, 0));
                 const intersections = raycasterDown.intersectObjects(objects);
                 const onObject = intersections.length > 0;
@@ -319,16 +351,15 @@
                         canJump = true;
                     }
                 } else if (playerPos.y <= 0) {
-                    // 確保絕對不穿透地面
                     velocity.y = 0;
                     playerPos.y = 0;
                     canJump = true;
                 }
 
-                // 旋轉同步
+                // 同步旋轉：讓角色面向前方的同時，頭部稍微跟隨視角
                 playerGroup.rotation.y = camera.rotation.y + Math.PI;
 
-                // 奔跑動畫
+                // 奔跑肢體動畫
                 if (keys.w || keys.s || keys.a || keys.d) {
                     const speedFactor = keys.shift ? 15 : 10;
                     const angle = Math.sin(Date.now() * 0.001 * speedFactor) * 0.6;
@@ -352,7 +383,6 @@
                     camera.position.lerp(targetCamPos, 0.2);
                 }
 
-                // 更新 UI
                 uiX.innerText = Math.round(playerPos.x);
                 uiY.innerText = Math.round(playerPos.y);
                 uiZ.innerText = Math.round(playerPos.z);
