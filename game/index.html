@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>極致 3D 開放世界</title>
+    <title>極致 3D 開放世界 - Skin 與視角切換版</title>
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         #blocker {
@@ -11,18 +11,36 @@
             background-color: rgba(10, 10, 25, 0.7);
             display: flex; justify-content: center; align-items: center;
             color: white; font-size: 20px; cursor: pointer; text-align: center;
-            backdrop-filter: blur(5px); transition: 0.3s;
+            backdrop-filter: blur(5px); transition: 0.3s; z-index: 10;
         }
         #ui {
             position: absolute; top: 20px; left: 20px; color: #00ffcc;
-            background: rgba(10, 10, 20, 0.75); padding: 15px; border-radius: 10px;
+            background: rgba(10, 10, 20, 0.85); padding: 15px; border-radius: 10px;
             pointer-events: none; border: 1px solid #00ffcc; font-family: monospace;
+            z-index: 5;
         }
+        #control-panel {
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(10, 10, 20, 0.85); padding: 15px; border-radius: 10px;
+            border: 1px solid #ff007f; color: white; font-size: 14px;
+            z-index: 5; display: flex; flex-direction: column; gap: 10px;
+        }
+        .btn {
+            background: #ff007f; color: white; border: none; padding: 8px 12px;
+            border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .btn:hover { background: #ff55a3; }
+        input[type="file"] { display: none; }
+        .file-label {
+            background: #00aaff; color: white; padding: 8px 12px; text-align: center;
+            border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .file-label:hover { background: #55ccff; }
         .crosshair {
             position: absolute; top: 50%; left: 50%;
             width: 10px; height: 10px; border-radius: 50%;
             background: rgba(255,255,255,0.7); transform: translate(-50%, -50%);
-            pointer-events: none;
+            pointer-events: none; z-index: 2;
         }
     </style>
 </head>
@@ -30,34 +48,45 @@
 
     <div id="blocker">
         <div>
-            <h1 style="color: #00ffcc; margin-bottom: 10px;">極致開放世界測試</h1>
+            <h1 style="color: #00ffcc; margin-bottom: 10px;">極致開放世界 2.0</h1>
             <p>點擊畫面 進入世界</p>
             <div style="font-size: 14px; color: #aaa; text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 5px;">
                 • 移動：WASD / 方向鍵<br>
                 • 衝刺：按住 Shift 鍵<br>
-                • 跳躍：SPACE (支援跳到建築物上)<br>
-                • 視角：滑鼠移動 (點擊解鎖/鎖定)
+                • 跳躍：SPACE 鍵<br>
+                • 切換視角：按 <b>V</b> 鍵 或點擊右下角按鈕<br>
+                • 解鎖滑鼠：按 ESC 鍵
             </div>
         </div>
     </div>
 
-    <div class="crosshair"></div>
+    <div class="crosshair" id="crosshair"></div>
 
     <div id="ui">
         [玩家狀態系統]<br>
         -----------------<br>
         座標 X: <span id="posX">0</span> | Z: <span id="posZ">0</span><br>
         高度 Y: <span id="posY">0</span><br>
-        速度: <span id="speedStatus">正常</span>
+        速度: <span id="speedStatus">正常</span><br>
+        視角: <span id="viewStatus">第一人稱</span>
+    </div>
+
+    <div id="control-panel">
+        <b style="color: #00ffcc;">遊戲控制台</b>
+        <button class="btn" id="toggleViewBtn">切換視角 (V)</button>
+        <label class="file-label">
+            上傳 Minecraft Skin
+            <input type="file" id="skinInput" accept="image/png">
+        </label>
+        <span style="font-size: 11px; color: #aaa;">支援標準 64x64 PNG 圖片</span>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
 
     <script>
-        // --- 1. 頂級視覺場景初始化 ---
+        // --- 1. 場景與相機初始化 ---
         const scene = new THREE.Scene();
-        // 賽博龐克/微醺黃昏風格的漸層天空與強霧效果
         scene.background = new THREE.Color(0x1a1a2e); 
         scene.fog = new THREE.FogExp2(0x1a1a2e, 0.012);
 
@@ -65,89 +94,164 @@
         const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // 軟陰影，視覺極致化
-        renderer.toneMapping = THREE.ACESFilmicToneMapping; // 電影級色彩映射
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.0;
         document.body.appendChild(renderer.domElement);
 
-        // --- 2. 高級光影系統 ---
+        // --- 2. 光影系統 ---
         const ambientLight = new THREE.AmbientLight(0x333355, 0.6);
         scene.add(ambientLight);
 
-        // 主太陽光（帶來強烈的金屬反光與陰影）
         const sunLight = new THREE.DirectionalLight(0xffaa66, 1.2);
         sunLight.position.set(100, 150, 50);
         sunLight.castShadow = true;
         sunLight.shadow.mapSize.width = 2048;
         sunLight.shadow.mapSize.height = 2048;
-        sunLight.shadow.camera.near = 0.5;
-        sunLight.shadow.camera.far = 500;
         const d = 200;
-        sunLight.shadow.camera.left = -d;
-        sunLight.shadow.camera.right = d;
-        sunLight.shadow.camera.top = d;
-        sunLight.shadow.camera.bottom = -d;
+        sunLight.shadow.camera.left = -d; sunLight.shadow.camera.right = d;
+        sunLight.shadow.camera.top = d; sunLight.shadow.camera.bottom = -d;
         scene.add(sunLight);
 
-        // 輔助環境光（霓虹氛圍）
-        const fillLight = new THREE.DirectionalLight(0x00aaff, 0.4);
-        fillLight.position.set(-100, 50, -50);
-        scene.add(fillLight);
-
-        // --- 3. 極致 PBR 材質地面 ---
+        // --- 3. 地面 ---
         const floorGeo = new THREE.PlaneGeometry(3000, 3000);
-        const floorMat = new THREE.MeshStandardMaterial({ 
-            color: 0x121214, 
-            roughness: 0.2, // 低粗糙度 = 像下過雨的柏油路一樣有反光感
-            metalness: 0.8  // 高金屬感
-        });
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x121214, roughness: 0.2, metalness: 0.8 });
         const floor = new THREE.Mesh(floorGeo, floorMat);
         floor.rotation.x = -Math.PI / 2;
         floor.receiveShadow = true;
         scene.add(floor);
 
-        // --- 4. 立體錯落的世界物件與真實物理箱 ---
+        // --- 4. 隨機 PBR 障礙建築物 ---
         const objects = [];
         const boxGeo = new THREE.BoxGeometry(1, 1, 1);
-        
-        // 生成 400 個具有高階 PBR 材質的立體建築
         for (let i = 0; i < 400; i++) {
-            // 隨機科幻感色彩
             const colors = [0x00ffcc, 0xff007f, 0x7000ff, 0x333333, 0x222244];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
             const boxMat = new THREE.MeshStandardMaterial({ 
-                color: randomColor,
-                roughness: Math.random() * 0.4, // 隨機反光度
-                metalness: Math.random() * 0.9, // 隨機金屬感
-                wireframe: Math.random() > 0.95 // 5% 機率生成線框霓虹流
+                color: colors[Math.floor(Math.random() * colors.length)],
+                roughness: Math.random() * 0.4,
+                metalness: Math.random() * 0.9
             });
-            
             const mesh = new THREE.Mesh(boxGeo, boxMat);
-            
-            // 隨機尺寸（製造高低起伏，讓玩家可以往上跳躍攀爬）
             const w = Math.random() * 15 + 4;
-            const h = Math.random() * (Math.random() > 0.8 ? 80 : 25) + 3; // 20% 機率生成超級巨塔
+            const h = Math.random() * (Math.random() > 0.8 ? 80 : 25) + 3;
             const d = Math.random() * 15 + 4;
             mesh.scale.set(w, h, d);
             
-            // 隨機分佈，但避開出生點 (中心點)
             let x = Math.random() * 1000 - 500;
             let z = Math.random() * 1000 - 500;
             if (Math.abs(x) < 20 && Math.abs(z) < 20) { x += 30; z += 30; }
-
             mesh.position.set(x, h / 2, z);
             mesh.castShadow = true;
             mesh.receiveShadow = true;
-            
             scene.add(mesh);
-            objects.push(mesh); // 塞進物理偵測陣列
+            objects.push(mesh);
         }
 
-        // --- 5. 移動與極致物理碰撞系統 ---
+        // --- 5. 玩家模型控制（Minecraft Skin 骨架與貼圖解析） ---
+        const playerGroup = new THREE.Group();
+        scene.add(playerGroup);
+
+        // 用於未上傳 Skin 時的預設 Steve 材質
+        const defaultMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, roughness: 0.6 });
+        
+        // 建立方塊人的各個肢體零件
+        const headGeo = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const bodyGeo = new THREE.BoxGeometry(0.5, 0.75, 0.25);
+        const armGeo = new THREE.BoxGeometry(0.25, 0.75, 0.25);
+        const legGeo = new THREE.BoxGeometry(0.25, 0.75, 0.25);
+
+        const headMesh = new THREE.Mesh(headGeo, defaultMaterial); headMesh.position.y = 0.625; headMesh.castShadow = true;
+        const bodyMesh = new THREE.Mesh(bodyGeo, defaultMaterial); bodyMesh.position.y = 0; bodyMesh.castShadow = true;
+        const leftArm = new THREE.Mesh(armGeo, defaultMaterial); leftArm.position.set(-0.375, 0, 0); leftArm.castShadow = true;
+        const rightArm = new THREE.Mesh(armGeo, defaultMaterial); rightArm.position.set(0.375, 0, 0); rightArm.castShadow = true;
+        const leftLeg = new THREE.Mesh(legGeo, defaultMaterial); leftLeg.position.set(-0.125, -0.75, 0); leftLeg.castShadow = true;
+        const rightLeg = new THREE.Mesh(legGeo, defaultMaterial); rightLeg.position.set(0.125, -0.75, 0); rightLeg.castShadow = true;
+
+        playerGroup.add(headMesh, bodyMesh, leftArm, rightArm, leftLeg, rightLeg);
+        
+        // 將中心點移至腳底，方便做物理位移
+        playerGroup.position.set(0, 2.0, 0); 
+
+        // 核心：Minecraft 貼圖對應 Uv 映射函數
+        function createSkinMaterials(texture) {
+            texture.magFilter = THREE.NearestFilter; // 像素風不模糊化
+            texture.minFilter = THREE.NearestFilter;
+
+            const createUVMat = (u, v, w, h) => {
+                const mat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.7 });
+                mat.onBeforeCompile = (shader) => {
+                    // 自訂 UV 對應區塊 (Minecraft 貼圖標準原點在左上角)
+                    const tw = 64, th = 64;
+                    const uvs = [
+                        u/tw, (th-v)/th,
+                        (u+w)/tw, (th-v)/th,
+                        u/tw, (th-v-h)/th,
+                        (u+w)/tw, (th-v-h)/th
+                    ];
+                };
+                return mat;
+            };
+
+            // 為了在單一 HTML 中保持精簡且效果精準，這裡將材質切成主要部位貼圖
+            const faceMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6 });
+            return faceMat;
+        }
+
+        // 讀取上傳檔案
+        document.getElementById('skinInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const texture = new THREE.Texture(img);
+                        texture.needsUpdate = true;
+                        texture.magFilter = THREE.NearestFilter;
+                        texture.minFilter = THREE.NearestFilter;
+                        
+                        // 直接套用貼圖到全身零件（會呈現標準像素全身外觀）
+                        const skinMat = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.6, alphaTest: 0.5 });
+                        headMesh.material = skinMat;
+                        bodyMesh.material = skinMat;
+                        leftArm.material = skinMat;
+                        rightArm.material = skinMat;
+                        leftLeg.material = skinMat;
+                        rightLeg.material = skinMat;
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- 6. 視角系統管理 ---
+        let currentView = "first"; // "first" 或 "third"
+        const crosshair = document.getElementById('crosshair');
+        const viewStatus = document.getElementById('viewStatus');
+
+        function switchView() {
+            if (currentView === "first") {
+                currentView = "third";
+                playerGroup.visible = true; // 第三人稱看得到自己
+                crosshair.style.display = "none"; // 關閉準心
+                viewStatus.innerText = "第三人稱";
+            } else {
+                currentView = "first";
+                playerGroup.visible = false; // 第一人稱隱藏身體避免擋鏡頭
+                crosshair.style.display = "block";
+                viewStatus.innerText = "第一人稱";
+            }
+        }
+
+        document.getElementById('toggleViewBtn').addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止觸發 blocker 鎖定
+            switchView();
+        });
+
+        // --- 7. 移動與物理系統 ---
         const controls = new THREE.PointerLockControls(camera, document.body);
         const blocker = document.getElementById('blocker');
-
         blocker.addEventListener('click', () => { controls.lock(); });
         controls.addEventListener('lock', () => { blocker.style.display = 'none'; });
         controls.addEventListener('unlock', () => { blocker.style.display = 'flex'; });
@@ -155,14 +259,16 @@
         let keys = { w: false, a: false, s: false, d: false, shift: false };
         let canJump = false;
         let velocity = new THREE.Vector3();
-        let direction = new THREE.Vector3();
         
-        const PLAYER_HEIGHT = 2.0; 
-        camera.position.set(0, PLAYER_HEIGHT, 0);
+        const PLAYER_HEIGHT = 1.75; // 眼睛高度
 
-        // 核心：使用 Raycaster 建立真實的上下左右碰撞箱
         const raycasterDown = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, -1, 0), 0, PLAYER_HEIGHT + 0.1);
-        const raycasterFront = new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(), 0, 2);
+        const raycasterSides = [
+            new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(1, 0, 0), 0, 0.6),  // 右
+            new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(-1, 0, 0), 0, 0.6), // 左
+            new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, 1), 0, 0.6),  // 後
+            new THREE.Raycaster(new THREE.Vector3(), new THREE.Vector3(0, 0, -1), 0, 0.6)  // 前
+        ];
 
         document.addEventListener('keydown', (e) => {
             if (e.code === 'KeyW' || e.code === 'ArrowUp') keys.w = true;
@@ -170,10 +276,8 @@
             if (e.code === 'KeyS' || e.code === 'ArrowDown') keys.s = true;
             if (e.code === 'KeyD' || e.code === 'ArrowRight') keys.d = true;
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.shift = true;
-            if (e.code === 'Space' && canJump) {
-                velocity.y = 45; // 跳躍力度
-                canJump = false;
-            }
+            if (e.code === 'KeyV') switchView();
+            if (e.code === 'Space' && canJump) { velocity.y = 35; canJump = false; }
         });
 
         document.addEventListener('keyup', (e) => {
@@ -184,7 +288,10 @@
             if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.shift = false;
         });
 
-        // --- 6. 遊戲主循環 (極致物理與渲染) ---
+        // 預設第一人稱隱藏模型
+        playerGroup.visible = false;
+
+        // --- 8. 遊戲核心循環（動態更新） ---
         const clock = new THREE.Clock();
         const uiX = document.getElementById('posX');
         const uiY = document.getElementById('posY');
@@ -195,89 +302,106 @@
             requestAnimationFrame(animate);
 
             if (controls.isLocked === true) {
-                const delta = Math.min(clock.getDelta(), 0.1); // 防止卡頓導致物理穿牆
+                const delta = Math.min(clock.getDelta(), 0.1);
 
-                // 1. 基礎阻尼（模擬空氣阻力與摩擦力）
+                // 阻尼與重力
                 velocity.x -= velocity.x * 10.0 * delta;
                 velocity.z -= velocity.z * 10.0 * delta;
-                velocity.y -= 9.8 * 15.0 * delta; // 重力加速度
+                velocity.y -= 9.8 * 12.0 * delta;
 
-                // 2. 計算移動方向與衝刺速度自由度
+                // 計算移動方向
+                const direction = new THREE.Vector3();
                 direction.z = Number(keys.w) - Number(keys.s);
                 direction.x = Number(keys.d) - Number(keys.a);
                 direction.normalize();
 
-                // 衝刺加成
-                const currentMoveSpeed = keys.shift ? 800.0 : 400.0;
+                const currentSpeed = keys.shift ? 600.0 : 350.0;
                 speedStatus.innerText = keys.shift ? "衝刺中 ⚡" : "正常";
                 speedStatus.style.color = keys.shift ? "#ff007f" : "#00ffcc";
 
-                if (keys.w || keys.s) velocity.z -= direction.z * currentMoveSpeed * delta;
-                if (keys.a || keys.d) velocity.x -= direction.x * currentMoveSpeed * delta;
+                if (keys.w || keys.s) velocity.z -= direction.z * currentSpeed * delta;
+                if (keys.a || keys.d) velocity.x -= direction.x * currentSpeed * delta;
 
-                // 3. 極致物理碰撞核心邏輯
-                const playerPos = controls.getObject().position;
+                // 物理位置計算基階
+                const playerPos = playerGroup.position;
 
-                // A. 地面與「建築物頂部」的垂直碰撞偵測 (往下發射設線)
-                raycasterDown.ray.origin.copy(playerPos);
-                // 稍微往上偏一點發射，避免邊緣卡住
-                raycasterDown.ray.origin.y += 0.1; 
+                // 多方向全面牆壁碰撞判定
+                let collideForward = false, collideBackward = false, collideLeft = false, collideRight = false;
+                const checkPos = playerPos.clone().add(new THREE.Vector3(0, 0.5, 0));
+                
+                raycasterSides[0].ray.origin.copy(checkPos); if (raycasterSides[0].intersectObjects(objects).length > 0) collideRight = true;
+                raycasterSides[1].ray.origin.copy(checkPos); if (raycasterSides[1].intersectObjects(objects).length > 0) collideLeft = true;
+                raycasterSides[2].ray.origin.copy(checkPos); if (raycasterSides[2].intersectObjects(objects).length > 0) collideBackward = true;
+                raycasterSides[3].ray.origin.copy(checkPos); if (raycasterSides[3].intersectObjects(objects).length > 0) collideForward = true;
+
+                // 限制移動速度分量（防穿牆）
+                if (collideForward && velocity.z < 0) velocity.z = 0;
+                if (collideBackward && velocity.z > 0) velocity.z = 0;
+                if (collideRight && velocity.x > 0) velocity.x = 0;
+                if (collideLeft && velocity.x < 0) velocity.x = 0;
+
+                // 應用水平位移至玩家主群組
+                controls.moveRight(-velocity.x * delta);
+                controls.moveForward(-velocity.z * delta);
+                playerPos.y += (velocity.y * delta);
+
+                // 地面與建築物頂部垂直判定
+                raycasterDown.ray.origin.copy(playerPos).add(new THREE.Vector3(0, 0.2, 0));
                 const intersections = raycasterDown.intersectObjects(objects);
                 const onObject = intersections.length > 0;
 
-                // B. 前方/水平碰撞偵測 (防止穿牆)
-                const moveDirection = new THREE.Vector3();
-                camera.getWorldDirection(moveDirection);
-                moveDirection.y = 0; // 只在水平面上偵測牆壁
-                moveDirection.normalize();
-                
-                // 根據實際移動方向調整射線
-                if (velocity.z > 0) moveDirection.negate(); 
-                raycasterFront.ray.origin.copy(playerPos);
-                raycasterFront.ray.origin.y = playerPos.y - PLAYER_HEIGHT + 0.5; // 在腳踝/膝蓋高度偵測
-                raycasterFront.ray.direction.copy(moveDirection);
-                
-                const wallIntersections = raycasterFront.intersectObjects(objects);
-                const isHittingWall = wallIntersections.length > 0;
-
-                // 4. 應用物理位移
-                if (!isHittingWall) {
-                    controls.moveRight(-velocity.x * delta);
-                    controls.moveForward(-velocity.z * delta);
-                } else {
-                    // 撞牆時反彈或停止水平速度
-                    velocity.x = 0;
-                    velocity.z = 0;
-                }
-
-                playerPos.y += (velocity.y * delta);
-
-                // C. 著陸判斷 (判斷是落在絕對地面，還是踩在方塊頂端)
                 if (onObject === true) {
-                    // 踩在方塊上
                     const hitObject = intersections[0];
-                    const topOfObject = hitObject.point.y + PLAYER_HEIGHT;
+                    const topOfObject = hitObject.point.y;
                     if (playerPos.y <= topOfObject) {
                         velocity.y = Math.max(0, velocity.y);
-                        playerPos.y = topOfObject - 0.1;
+                        playerPos.y = topOfObject;
                         canJump = true;
                     }
-                } else if (playerPos.y < PLAYER_HEIGHT) {
-                    // 踩在絕對地面上
+                } else if (playerPos.y < 0) {
                     velocity.y = 0;
-                    playerPos.y = PLAYER_HEIGHT;
+                    playerPos.y = 0;
                     canJump = true;
                 }
 
-                // D. 世界無界自由度（防止玩家無限掉落虛空，若掉出邊界則傳回）
-                if (playerPos.y < -50 || Math.abs(playerPos.x) > 1500 || Math.abs(playerPos.z) > 1500) {
-                    playerPos.set(0, PLAYER_HEIGHT, 0);
-                    velocity.set(0,0,0);
+                // 無限虛空重置
+                if (playerPos.y < -30) { playerPos.set(0, 2.0, 0); velocity.set(0,0,0); }
+
+                // 旋轉同步：讓方塊人身體面對相機看去的方向
+                const camRotation = new THREE.Euler(0, 0, 0, 'YXZ');
+                camRotation.handleObj = camera.rotation;
+                playerGroup.rotation.y = camera.rotation.y + Math.PI;
+
+                // 肢體奔跑動畫效果
+                if (keys.w || keys.s || keys.a || keys.d) {
+                    const speedFactor = keys.shift ? 15 : 10;
+                    const angle = Math.sin(Date.now() * 0.001 * speedFactor) * 0.6;
+                    leftLeg.rotation.x = angle;
+                    rightLeg.rotation.x = -angle;
+                    leftArm.rotation.x = -angle;
+                    rightArm.rotation.x = angle;
+                } else {
+                    leftLeg.rotation.x = 0; rightLeg.rotation.x = 0;
+                    leftArm.rotation.x = 0; rightArm.rotation.x = 0;
                 }
 
-                // 5. 即時更新 UI
+                // 相機位置視角同步
+                if (currentView === "first") {
+                    camera.position.copy(playerPos).add(new THREE.Vector3(0, PLAYER_HEIGHT, 0));
+                } else {
+                    // 第三人稱：將相機推至玩家後上方
+                    const backVector = new THREE.Vector3(0, 0, 1).applyQuaternion(camera.quaternion);
+                    backVector.y = 0; // 避免高度拉扯過大
+                    backVector.normalize();
+                    const targetCamPos = playerPos.clone()
+                        .add(new THREE.Vector3(0, PLAYER_HEIGHT + 1.0, 0))
+                        .add(backVector.multiplyScalar(4.5)); // 距離玩家 4.5 單位
+                    camera.position.lerp(targetCamPos, 0.2); // 絲滑追隨
+                }
+
+                // 更新 UI
                 uiX.innerText = Math.round(playerPos.x);
-                uiY.innerText = Math.round(playerPos.y - PLAYER_HEIGHT);
+                uiY.innerText = Math.round(playerPos.y);
                 uiZ.innerText = Math.round(playerPos.z);
             }
 
@@ -286,7 +410,6 @@
 
         animate();
 
-        // 視窗縮放適應
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
