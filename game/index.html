@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D 開放世界遊戲</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #blocker {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="blocker">
+        <div>
+            <strong>點擊畫面開始遊戲</strong><br><br>
+            移動：WASD / 方向鍵<br>
+            跳躍：SPACE (空白鍵)<br>
+            轉動視角：移動滑鼠
+        </div>
+    </div>
+
+    <div id="ui">
+        座標: X: <span id="posX">0</span>, Z: <span id="posZ">0</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/PointerLockControls.js"></script>
+
+    <script>
+        // --- 1. 基本場景設定 ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xefd1b5); // 天空顏色
+        scene.fog = new THREE.FogExp2(0xefd1b5, 0.015); // 霧氣效果
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // --- 2. 光源設定 ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(20, 40, 20);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        // --- 3. 建立地面 (開放世界舞台) ---
+        const floorGeo = new THREE.PlaneGeometry(2000, 2000);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x348c31 }); // 草地綠
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // --- 4. 隨機生成世界物體 (建築物/方塊) ---
+        const objects = [];
+        const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+        
+        for (let i = 0; i < 300; i++) {
+            // 隨機不同顏色的方塊建築
+            const boxMat = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff });
+            const mesh = new THREE.Mesh(boxGeo, boxMat);
+            
+            // 隨機尺寸與位置
+            const w = Math.random() * 10 + 2;
+            const h = Math.random() * 30 + 5;
+            const d = Math.random() * 10 + 2;
+            mesh.scale.set(w, h, d);
+            
+            mesh.position.x = Math.random() * 800 - 400;
+            mesh.position.y = h / 2; // 確保底部在地面上
+            mesh.position.z = Math.random() * 800 - 400;
+            
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            
+            scene.add(mesh);
+            objects.push(mesh); // 放入陣列用於後續碰撞偵測
+        }
+
+        // --- 5. 玩家控制與物理變數 ---
+        const controls = new THREE.PointerLockControls(camera, document.body);
+        const blocker = document.getElementById('blocker');
+
+        blocker.addEventListener('click', () => { controls.lock(); });
+        controls.addEventListener('lock', () => { blocker.style.display = 'none'; });
+        controls.addEventListener('unlock', () => { blocker.style.display = 'flex'; });
+
+        let moveForward = false;
+        let moveBackward = false;
+        let moveLeft = false;
+        let moveRight = false;
+        let canJump = false;
+
+        let velocity = new THREE.Vector3();
+        let direction = new THREE.Vector3();
+        
+        // 玩家基本數值
+        const PLAYER_HEIGHT = 2; 
+        camera.position.y = PLAYER_HEIGHT;
+
+        // 監聽鍵盤事件
+        const onKeyDown = (event) => {
+            switch (event.code) {
+                case 'ArrowUp':
+                case 'KeyW': moveForward = true; break;
+                case 'ArrowLeft':
+                case 'KeyA': moveLeft = true; break;
+                case 'ArrowDown':
+                case 'KeyS': moveBackward = true; break;
+                case 'ArrowRight':
+                case 'KeyD': moveRight = true; break;
+                case 'Space': if (canJump === true) velocity.y += 30; canJump = false; break;
+            }
+        };
+
+        const onKeyUp = (event) => {
+            switch (event.code) {
+                case 'ArrowUp':
+                case 'KeyW': moveForward = false; break;
+                case 'ArrowLeft':
+                case 'KeyA': moveLeft = false; break;
+                case 'ArrowDown':
+                case 'KeyS': moveBackward = false; break;
+                case 'ArrowRight':
+                case 'KeyD': moveRight = false; break;
+            }
+        };
+
+        document.addEventListener('keydown', onKeyDown);
+        document.addEventListener('keyup', onKeyUp);
+
+        // --- 6. 遊戲核心循環 (Game Loop) ---
+        const clock = new THREE.Clock();
+        const uiX = document.getElementById('posX');
+        const uiZ = document.getElementById('posZ');
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (controls.isLocked === true) {
+                const delta = clock.getDelta(); // 取得每影格的時間差
+
+                // 阻尼/摩擦力效果（讓移動不會馬上停下，有慣性）
+                velocity.x -= velocity.x * 10.0 * delta;
+                velocity.z -= velocity.z * 10.0 * delta;
+                velocity.y -= 9.8 * 12.0 * delta; // 重力加速度
+
+                direction.z = Number(moveForward) - Number(moveBackward);
+                direction.x = Number(moveRight) - Number(moveLeft);
+                direction.normalize(); // 確保斜向移動不會變快
+
+                if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+                if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
+
+                // 應用移動
+                controls.moveRight(-velocity.x * delta);
+                controls.moveForward(-velocity.z * delta);
+                controls.getObject().position.y += (velocity.y * delta);
+
+                // 地面碰撞偵測 (簡單版：落到地面高度就停止)
+                if (controls.getObject().position.y < PLAYER_HEIGHT) {
+                    velocity.y = 0;
+                    controls.getObject().position.y = PLAYER_HEIGHT;
+                    canJump = true;
+                }
+
+                // 更新 UI 座標
+                uiX.innerText = Math.round(camera.position.x);
+                uiZ.innerText = Math.round(camera.position.z);
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // 視窗大小縮放調整
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html>
