@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小揖資訊服務 | 專業網頁架設與技術顧問</title>
+    <!-- 引入 Tailwind CSS 讓畫面變好看 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Font Awesome 圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #313338; /* Discord 經典底色 */
+        }
+    </style>
+</head>
+<body class="text-gray-200 font-sans">
+
+    <!-- 導覽列 -->
+    <nav class="bg-[#2b2d31] border-b border-[#1e1f22] sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="text-xl font-bold text-indigo-400 flex items-center gap-2">
+            <i class="fa-solid fa-code"></i> 小揖資訊服務
+        </div>
+        <div class="flex gap-6 text-sm font-medium">
+            <a href="#services" class="hover:text-indigo-400 transition">服務項目</a>
+            <a href="#portfolio" class="hover:text-indigo-400 transition">作品集</a>
+            <a href="#order" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-1.5 rounded-md transition flex items-center gap-1">
+                <i class="fa-brands fa-discord"></i> 立即開單
+            </a>
+        </div>
+    </nav>
+
+    <!-- 主視覺 Banner -->
+    <header class="max-w-5xl mx-auto px-6 py-20 text-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">
+            把複雜的架站，交給 <span class="text-indigo-400">小揖資訊服務</span>
+        </h1>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
+            專注於 Python/HTML 客製化開發、個人與形象網站架設、網域設定及伺服器部署。高效、穩定，用技術實現你的新夢想。
+        </p>
+        <a href="#order" class="inline-flex items-center gap-2 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold text-lg px-8 py-3 rounded-lg shadow-lg transition transform hover:-translate-y-0.5">
+            <i class="fa-brands fa-discord text-xl"></i> 前往 Discord 開單 / 下單
+        </a>
+    </header>
+
+    <!-- 服務項目 Section -->
+    <section id="services" class="bg-[#2b2d31] py-16">
+        <div class="max-w-5xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-white text-center mb-12 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-server text-indigo-400"></i> 服務方案與定價
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 方案 1 -->
+                <div class="bg-[#313338] border border-[#1e1f22] rounded-xl p-6 hover:border-indigo-500 transition">
+                    <h3 class="text-xl font-bold text-white mb-2">店家/形象/個人網站</h3>
+                    <div class="text-2xl font-black text-indigo-400 mb-4">NT$ 3,000+ <span class="text-sm font-normal text-gray-400">/ 起</span></div>
+                    <ul class="text-sm text-gray-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>首頁與基本介紹分頁</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>RWD RWD 行動裝置優化</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>客製化網域綁定設定</li>
+                    </ul>
+                </div>
+                <!-- 方案 2 -->
+                <div class="bg-[#313338] border border-indigo-500 rounded-xl p-6 relative">
+                    <span class="absolute -top-3 right-4 bg-indigo-500 text-white text-xs px-2 py-0.5 rounded-full uppercase font-bold">推薦</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Python 客製化系統</h3>
+                    <div class="text-2xl font-black text-indigo-400 mb-4">NT$ 8,000+ <span class="text-sm font-normal text-gray-400">/ 起</span></div>
+                    <ul class="text-sm text-gray-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>可綁多服務DNS的後端網頁開發</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>資料庫設計與 API 串接</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>自動化排程與 OpenCV 應用</li>
+                    </ul>
+                </div>
+                <!-- 方案 3 -->
+                <div class="bg-[#313338] border border-[#1e1f22] rounded-xl p-6 hover:border-indigo-500 transition">
+                    <h3 class="text-xl font-bold text-white mb-2">伺服器部署與維護</h3>
+                    <div class="text-2xl font-black text-indigo-400 mb-4">NT$ 1,500+ <span class="text-sm font-normal text-gray-400">/ 起</span></div>
+                    <ul class="text-sm text-gray-400 space-y-2 mb-6">
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>雲端主機環境配置</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>GitHub 專案自動化部署</li>
+                        <li><i class="fa-solid fa-check text-green-500 mr-2"></i>SSL 安全憑證免費安裝</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品集 Section -->
+    <section id="portfolio" class="py-16 max-w-5xl mx-auto px-6">
+        <h2 class="text-2xl font-bold text-white text-center mb-12 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-folder-open text-indigo-400"></i> 開發作品實績
+        </h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-[#2b2d31] rounded-lg p-6 border border-[#1e1f22]">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Python Tool</span>
+                <h3 class="text-lg font-bold text-white mt-2 mb-1">YiCountPlus 圖像分析系統</h3>
+                <p class="text-gray-400 text-sm">基於 OpenCV 開發的圖像自動化計數與分析工具，提供精準的數據處理。</p>
+            </div>
+            <div class="bg-[#2b2d31] rounded-lg p-6 border border-[#1e1f22]">
+                <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded">Web App</span>
+                <h3 class="text-lg font-bold text-white mt-2 mb-1">VseeBody VseeFace身體追蹤插件</h3>
+                <p class="text-gray-400 text-sm">讓您的虛擬形象3D化，實現高效能、高擴充性的全身追蹤引擎。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下單/開單指引 Section -->
+    <section id="order" class="bg-[#232428] py-16 text-center border-t border-[#1e1f22]">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-white mb-4">準備好開始了嗎？</h2>
+            <p class="text-gray-400 mb-8 text-sm md:text-base">
+                為了提供最安全且即時的服務，我們統一在 <strong class="text-white">Discord 伺服器</strong> 內進行一對一開單。
+                進群後前往 <span class="bg-[#2b2d31] text-indigo-300 px-1.5 py-0.5 rounded text-sm">#🔧｜委託開單</span> 頻道點擊按鈕，即可開始與小揖討論你的架站需求！
+            </p>
+            # Discord 伺服器邀請連結
+            <a href="https://discord.gg/Y2vaaNqPvd" target="_blank" class="inline-flex items-center gap-3 bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-xl px-10 py-4 rounded-xl shadow-2xl transition transform hover:scale-105">
+                <i class="fa-brands fa-discord text-2xl"></i> 加入 Discord 立即開單
+            </a>
+            
+            <div class="mt-8 text-xs text-gray-500 flex justify-center gap-6">
+                <span><i class="fa-solid fa-lock mr-1"></i> 定金制度保障雙方</span>
+                <span><i class="fa-solid fa-comments mr-1"></i> 進度每日透明更新</span>
+                <span><i class="fa-solid fa-file-contract mr-1"></i> 需求確認後才開工</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer class="bg-[#1e1f22] text-center py-6 text-xs text-gray-500">
+        &copy; 2026 小揖資訊服務 (揖個新夢想). All rights reserved.
+    </footer>
+
+</body>
+</html>
