@@ -36,11 +36,10 @@
             position: relative; overflow-x: hidden; background-color: #f0f9ff;
         }
 
-        /* 🎨 動態漸層背景畫布 */
+        /* 🎨 動態漸層背景畫布（保留滑順色彩隨機變換過渡） */
         .fullscreen-bg {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
             transition: background 3s ease-in-out; 
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
         }
 
         .global-lang-switcher {
@@ -383,32 +382,14 @@
         <p style="font-size: 0.9rem; color: #475569;">© 2026 VTuber聚集地 - 網站測試中</p>
     </div>
 
-    <div class="ai-floating-btn" id="ai-toggle-btn" onclick="toggleAiWindow()">
-        <i class="fas fa-robot"></i>
-    </div>
-
-    <div class="ai-chat-window" id="ai-chat-window">
-        <div class="ai-window-header">
-            <div class="ai-header-info">
-                <img src="Gemini_Generated_Image_yi9h87yi9h87yi9h-removebg-preview.png" alt="Logo">
-                <span>基地 AI 助理</span>
-            </div>
-            <div class="ai-close-btn" onclick="toggleAiWindow()"><i class="fas fa-times"></i></div>
-        </div>
-        <div class="ai-key-bar">
-            <input type="password" id="home-ai-key" placeholder="請貼上 Gemini API Key...">
-            <button class="ai-key-btn" onclick="saveHomeAiKey()">儲存</button>
-        </div>
-        <div class="ai-messages-body" id="ai-messages-box">
-            <div class="ai-bubble model">哈囉！我是 VTuber 工作室的專屬 AI 助理。有什麼關於基地、成員或是 Minecraft 伺服器的問題都可以問我喔！✨</div>
-        </div>
-        <div class="ai-window-footer">
-            <input type="text" id="ai-user-input" placeholder="輸入訊息..." onkeypress="handleAiKeyPress(event)">
-            <button class="ai-send-btn" onclick="sendHomeAiMessage()"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-
     <script>
+        // 💣 防扒專用：網域鎖定自毀炸彈
+        if (window.location.hostname !== "vtuber.qd.je" && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+            alert("⚠️ 偵測到非法盜用原始碼！本網頁由小揖(Λnewdream)原創開發，拒絕抄襲！");
+            document.body.innerHTML = "<div style='color:red; text-align:center; margin-top:30vh; font-family:sans-serif;'><h1>❌ 尊重原創，反對無腦抄襲！</h1><p style='color:#64748b; font-size:1.2rem;'>本專案原始碼隸屬於 小揖 (Λnewdream) 所有。</p></div>";
+            window.stop(); 
+        }
+
         // 固定常數設定
         const SPREADSHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1iaEgVqq3hUeSAD1cTIjPPONN0jd9SzYO4q40mixAb6E/gviz/tq?tqx=out:csv";
         const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeQv6cUJXcttiI00Io_h9oZaF3YKtR1_E364Jcjkah_lB1KeQ/viewform?embedded=true";
@@ -418,7 +399,7 @@
 
         // 📡 【影片試算表設定區】
         // 💡 小揖！記得把下面這一串換成你放影片資料的 Google 試算表 ID 喔！
-        const VIDEO_SPREADSHEET_ID = "這裡填入你的試算表ID"; 
+        const VIDEO_SPREADSHEET_ID = "這裡填入你的影片試算表ID"; 
         const VIDEO_CSV_URL = `https://docs.google.com/spreadsheets/d/${VIDEO_SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
 
         let MY_精選影片庫 = [];
@@ -437,7 +418,7 @@
                 hlt1: "衛福部安心專線", hln1: "台灣官方24小時免費諮詢專線。", hlt2: "生命線專線", hln2: "提供24小時自殺防治與危機干預。",
                 boxT: "寫封信給基地總裁", boxB: "開啟匿名傾訴樹洞",
                 mcT: "Minecraft 伺服器基地", mcSub: "小揖打造的專屬方塊社群！歡迎複製下方 IP 進入世界：", mcBtn: "複製官方連線 IP (vtuber.qd.je)", mcTipT: "伺服器遊玩守則：", mcTipB: "本伺服器整合了 SRV 頂級域名對接，保證連線流暢。請各位夥伴進入伺服器時保持友善、尊重他人建築、嚴禁使用外掛非法破壞，讓我們一起創造最棒的麥塊世界！",
-                copied: "✅ Minecraft 伺服器 IP (vtuber.qd.je) 已成功複製到剪貼簿！"
+                copied: "✅ Minecraft 伺服器 IP (vtuber.qd.je) 已成功複製到剪貼簿！", gotoYT: "前往頻道", defaultTitle: "成員"
             },
             cn: {
                 navTitle: "VTuber 聚集地", home: "基地首页", list: "大 / 小 VTuber 列表", video: "精选影音大厅", news: "最新动态公报", contact: "商务与合作联络", pj: "工作室专案页面 (pj)", care: "心灵充电站 (求助专区)", mc: "Minecraft 服务器",
@@ -449,8 +430,8 @@
                 carT: "心灵充电站", carB: "<i class='fas fa-mug-hot'></i> <b>亲爱的伙伴：</b><br>在创作、追梦或生活的路上，累了、受伤了都没关系。这里是一处安全的树洞。",
                 hlt1: "卫福部安心专線", hln1: "台湾官方24小时免费咨询专线。", hlt2: "生命线专线", hln2: "提供24小时 suicide 防治与危机干预。",
                 boxT: "写封信给基地总裁", boxB: "开启匿名倾诉树洞",
-                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连線 IP (vtuber.qd.je)", mcTipT: "服务器游玩守则：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起创造最棒的麦块世界！",
-                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪貼簿！"
+                mcT: "Minecraft 服务器基地", mcSub: "小揖打造的专属方块社区！欢迎复制下方 IP 进入世界：", mcBtn: "复制官方连線 IP (vtuber.qd.je)", mcTipT: "服务器游玩守則：", mcTipB: "本服务器整合了 SRV 顶级域名对接，保证连线流畅。请各位伙伴进入服务器时保持友善、尊重他人建筑、严禁使用外挂非法破坏，让我们一起創造最棒的麦塊世界！",
+                copied: "✅ Minecraft 服务器 IP (vtuber.qd.je) 已成功复制到剪貼簿！", gotoYT: "前往频道", defaultTitle: "成员"
             },
             jp: {
                 navTitle: "VTuber HUB", home: "ホーム", list: "VTuber 一覧", video: "動画シアター", news: "最新アナウンス", contact: "ビジネス・お問合せ", pj: "プロジェクト (pj)", care: "メンタルケア相談窓口", mc: "マイクラサーバー",
@@ -463,7 +444,7 @@
                 hlt1: "安心相談ホットライン", hln1: "台湾政府による24時間年中無休の無料心理カウンセリング。", hlt2: "生命の電話", hln2: "24時間対応の危機介入サービス。",
                 boxT: "代表へ手紙を書く", boxB: "匿名メッセージを開く",
                 mcT: "Minecraft サーバー基地", mcSub: "IPをコピーして世界へ参加しましょう：", mcBtn: "公式接続IPをコピー (vtuber.qd.je)", mcTipT: "サーバー利用規約：", mcTipB: "マナーを守り、他人の建築を尊重し、チートや荒らし行為は絶対にお控えください。",
-                copied: "✅ Minecraft サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！"
+                copied: "✅ Minecraft サーバーIP (vtuber.qd.je) がクリップボードにコピーされました！", gotoYT: "チャンネルへ", defaultTitle: "メンバー"
             },
             en: {
                 navTitle: "VTuber HUB", home: "Home HUB", list: "VTuber Members", video: "Video Theater", news: "Latest Bulletins", contact: "Business & Contact", pj: "Project Page (pj)", care: "Mental Care Station", mc: "Minecraft Server",
@@ -476,13 +457,12 @@
                 hlt1: "MOHW Reassurance Hotline", hln1: "Taiwan official 24/7 free psychological counseling hotline.", hlt2: "Lifeline Association", hln2: "Provides 24-hour crisis intervention.",
                 boxT: "Write to the Studio President", boxB: "Open Anonymous Box",
                 mcT: "Minecraft Server Base", mcSub: "Copy the IP to join our world:", mcBtn: "Copy Official Connection IP (vtuber.qd.je)", mcTipT: "Server Regulations:", mcTipB: "Please stay friendly, respect others' builds, and strictly prohibit hacks or griefing.",
-                copied: "✅ Minecraft Server IP (vtuber.qd.je) successfully copied to clipboard!"
+                copied: "✅ Minecraft Server IP (vtuber.qd.je) successfully copied to clipboard!", gotoYT: "Visit Channel", defaultTitle: "Member"
             }
         };
 
-        // 🔄 修正後的整合型分頁切換功能
+        // 🔄 整合型分頁切換功能
         function showPage(pageId) {
-            // 1. 隱藏所有分頁，隱藏非點選的分頁
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             
             const targetPage = document.getElementById(`page-${pageId}`);
@@ -493,8 +473,9 @@
                 return;
             }
             
-            // 2. 特殊分頁載入觸發
-            if (pageId === 'video') {
+            if (pageId === 'list') {
+                fetchVTubers();
+            } else if (pageId === 'video') {
                 fetchVideosFromSheets();
             } else if (pageId === 'news') {
                 document.getElementById('dc-widget-1').src = DC_WIDGET_1_URL;
@@ -503,7 +484,6 @@
                 document.getElementById('google-form-iframe').src = GOOGLE_FORM_URL;
             }
             
-            // 3. 安全關閉側邊欄與黑背景遮罩
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
             if (sidebar) sidebar.classList.remove('active');
@@ -519,10 +499,74 @@
             }
         }
 
-        // 📡 從試算表非同步撈影片資料
+        // 📡 從成員名單試算表撈資料並動態渲染（自動對接 member/ 資料夾）
+        function parseCSVLine(text) {
+            let p = '', r = []; let q = false;
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                if (c === '"') { q = !q; }
+                else if (c === ',' && !q) { r.push(p.trim()); p = ''; }
+                else { p += c; }
+            }
+            r.push(p.trim()); return r;
+        }
+
+        async function fetchVTubers() {
+            try {
+                const response = await fetch(SPREADSHEET_CSV_URL);
+                const data = await response.text();
+                const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
+                window.currentVTubersData = lines.slice(1);
+                
+                if (window.currentVTubersData.length === 0) {
+                    document.getElementById('vtuber-container').innerHTML = '<p style="color:#94a3b8;">No members found.</p>';
+                    return;
+                }
+                renderVTubers(window.currentVTubersData);
+            } catch (error) { 
+                document.getElementById('vtuber-container').innerHTML = '<p style="color:#ef4444;">❌ Error loading backend data!</p>'; 
+            }
+        }
+
+        function renderVTubers(rows) {
+            const container = document.getElementById('vtuber-container'); 
+            container.innerHTML = '';
+            const dict = mainI18n[currentGlobalLang];
+            const defaultAvatar = "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150";
+
+            rows.forEach(row => {
+                const cols = parseCSVLine(row);
+                if (cols.length >= 5 && cols[1] !== "") {
+                    let [title, name, image, youtube, description] = cols;
+                    
+                    image = image.replace(/^["']|["']$/g, '').trim(); 
+                    youtube = youtube.replace(/^["']|["']$/g, '').trim();
+                    name = name.replace(/^["']|["']$/g, '').trim();
+                    description = description.replace(/^["']|["']$/g, '').trim();
+                    
+                    const finalTitle = title.replace(/^["']|["']$/g, '').trim() || dict.defaultTitle;
+
+                    let finalImageSrc = image;
+                    if (image && !image.startsWith('http://') && !image.startsWith('https://')) {
+                        finalImageSrc = 'member/' + image; 
+                    }
+
+                    container.innerHTML += `
+                        <div class="vtuber-card">
+                            <div class="vtuber-title-tag">${finalTitle}</div><br>
+                            <img src="${finalImageSrc || defaultAvatar}" class="vtuber-avatar" onerror="this.src='${defaultAvatar}'" alt="${name}">
+                            <div class="vtuber-name">${name}</div>
+                            <div class="vtuber-desc">${description}</div>
+                            <a href="${youtube || '#'}" target="_blank" class="btn-sm-yt"><i class="fab fa-youtube"></i> ${dict.gotoYT}</a>
+                        </div>`;
+                }
+            });
+        }
+
+        // 📡 從精選影片試算表撈資料並動態渲染
         async function fetchVideosFromSheets() {
             const container = document.getElementById('video-playlist-container');
-            if (VIDEO_SPREADSHEET_ID === "這裡填入你的試算表ID") {
+            if (VIDEO_SPREADSHEET_ID === "這裡填入你的影片試算表ID") {
                 container.innerHTML = "<p style='color:#e11d48;'>⚠️ 小揖，請記得在原始碼中更換你真正的影片 Google 試算表 ID 喔！</p>";
                 return;
             }
@@ -548,7 +592,7 @@
                 initVideoTheater();
             } catch (error) {
                 console.error("載入試算表影片失敗:", error);
-                container.innerHTML = "<p style='color:#ef4444;'>❌ 讀取試算表失敗，請確認你的共用存取權已設為「任何人皆可檢視」。</p>";
+                container.innerHTML = "<p style='color:#ef4444;'>❌ 讀取試算表失敗，請確認共用權限為公開檢視。</p>";
             }
         }
 
@@ -584,7 +628,7 @@
             });
         }
 
-        // 接觸與其他分頁小工具切換
+        // 其他頁面功能切換
         function switchContact(type) {
             document.querySelectorAll('.contact-panel').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -631,7 +675,7 @@
             event.target.classList.add('active');
         }
 
-        // 📡 AI 助理模組相關函式
+        // 📡 AI 助理模組相關功能
         const HOME_GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`;
         let homeAiHistory = [];
 
@@ -654,7 +698,6 @@
             appendHomeAiBubble('user', prompt);
             inputEl.value = '';
             homeAiHistory.push({ role: "user", parts: [{ text: prompt }] });
-            
             const thinkingId = appendHomeAiBubble('model', `<i class="fas fa-spinner fa-spin"></i> 思考中...`);
 
             try {
@@ -698,6 +741,27 @@
             box.scrollTop = box.scrollHeight;
             return id;
         }
+
+        // 🎨 動態隨機漸層背景演算法
+        function getRandomColor() {
+            const r = Math.floor(Math.random() * 56) + 200; 
+            const g = Math.floor(Math.random() * 56) + 200;
+            const b = Math.floor(Math.random() * 56) + 250; 
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function updateDynamicBackground() {
+            const bgElement = document.getElementById('dynamic-bg');
+            if (bgElement) {
+                const color1 = getRandomColor();
+                const color2 = getRandomColor();
+                const angle = Math.floor(Math.random() * 360);
+                bgElement.style.background = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+            }
+        }
+
+        updateDynamicBackground();
+        setInterval(updateDynamicBackground, 5000); 
     </script>
 </body>
 </html>
