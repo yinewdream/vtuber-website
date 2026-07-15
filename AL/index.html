@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AL | 官方個人網站</title>
+    <!-- 引入 Font Awesome 圖示 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f0f0f;
+            --bg-card: #1c1c1e;
+            --primary-color: #ff4757; /* 醒目的紅色 */
+            --accent-color: #ffa502;  /* 橘黃色輔助 */
+            --text-main: #ffffff;
+            --text-sub: #a4a4a8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* 頂部招牌橫幅 */
+        .banner {
+            background-color: #000000;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 2px solid #2d2d2d;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .banner h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        /* 個人資訊區 */
+        .profile-container {
+            max-width: 900px;
+            margin: -60px auto 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--bg-dark);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+            object-fit: cover;
+            background-color: #222;
+        }
+
+        .profile-info {
+            margin-top: 15px;
+        }
+
+        .profile-info h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .profile-info .handle {
+            color: var(--text-sub);
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .stats {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 按鈕群組 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-youtube {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-youtube:hover {
+            background-color: #ff2e44;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-discord {
+            background-color: #5865F2;
+            color: white;
+        }
+
+        .btn-discord:hover {
+            background-color: #4752C4;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        /* 內容區塊 */
+        .content-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /* 影片排版 */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .video-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #2c2c2e;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            border-color: #444;
+        }
+
+        .video-thumbnail {
+            position: relative;
+            padding-bottom: 177.77%; /* 9:16 直式 Shorts 比例，適合他近期的精華影片 */
+            height: 0;
+            background-color: #000;
+        }
+
+        /* 如果要放橫式 16:9 影片，可以用這個 class */
+        .video-thumbnail.landscape {
+            padding-bottom: 56.25%; 
+        }
+
+        .video-thumbnail iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-meta {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 60px;
+            border-top: 1px solid #2c2c2e;
+            color: var(--text-sub);
+            font-size: 0.85rem;
+        }
+
+        /* 手機版優化 */
+        @media (max-width: 600px) {
+            .banner h1 {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            .banner {
+                height: 160px;
+            }
+            .avatar {
+                width: 100px;
+                height: 100px;
+            }
+            .profile-container {
+                margin-top: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頂部招牌橫幅 -->
+    <div class="banner">
+        <h1>" 訂閱我 "</h1>
+    </div>
+
+    <!-- 個人資訊區 -->
+    <div class="profile-container">
+        <!-- 頭像請替換成 AL 的大頭貼網址 -->
+        <img class="avatar" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150" alt="AL Avatar">
+        
+        <div class="profile-info">
+            <h2>AL</h2>
+            <div class="handle">@ALax0r777</div>
+            <div class="stats">1.17 萬位訂閱者 &bull; 557 部影片</div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="https://youtube.com/@alax0r777?si=Kl_qRNKbyEizjnwx" target="_blank" class="btn btn-youtube">
+                <i class="fab fa-youtube"></i> 訂閱頻道
+            </a>
+            <a href="#" target="_blank" class="btn btn-discord">
+                <i class="fab fa-discord"></i> 加入 Discord 社群
+            </a>
+        </div>
+    </div>
+
+    <!-- 影片專區 -->
+    <section class="content-section">
+        <h2 class="section-title">熱門短影音 / 創作</h2>
+        <div class="video-grid">
+            
+            <!-- 影片卡片 1（直式 Shorts 範例）-->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <!-- 替換為實際的 Shorts 嵌入連結 -->
+                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_1" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>狂想小空被罵了</h3>
+                    <p class="video-meta">熱門觀看 &bull; 精彩精華</p>
+                </div>
+            </div>
+
+            <!-- 影片卡片 2（直式 Shorts 範例）-->
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_2" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>抄襲小妞的第二天</h3>
+                    <p class="video-meta">極限系列 &bull; 趣味挑戰</p>
+                </div>
+            </div>
+
+            <!-- 影片卡片 3（橫式影片範例，加上 .landscape 類別）-->
+            <div class="video-card">
+                <div class="video-thumbnail landscape">
+                    <iframe src="https://www.youtube.com/embed/VIDEO_ID_3" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <h3>士肆判所有 Roblox 精彩挑戰</h3>
+                    <p class="video-meta">長片企劃 &bull; 歡樂實況</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 頁尾 -->
+    <footer>
+        <p>&copy; 2026 AL. Powered by anewdream.eu.cc</p>
+    </footer>
+
+</body>
+</html>
